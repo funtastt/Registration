@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "486895749477",
+    "project_id": "stocksimulator-3536d",
+    "storage_bucket": "stocksimulator-3536d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486895749477:android:a8bcb2bd3f3bae2e43b98c",
+        "android_client_info": {
+          "package_name": "com.example.registration"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486895749477-ug7v4l88n7e001r7cv0svfr22nbumbh9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.registration",
+            "certificate_hash": "18352591a50e24436e8c3b34184cb6935c2c2faf"
+          }
+        },
+        {
+          "client_id": "486895749477-njm3m4uf2r6snm3ojqhca4d2v2nths15.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwBN36PlqxlPuKVQCVuQYo5kt1tOyOSNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "486895749477-njm3m4uf2r6snm3ojqhca4d2v2nths15.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
