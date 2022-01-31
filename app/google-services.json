@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "558262318409",
+    "firebase_url": "https://stocks-95f7e-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "stocks-95f7e",
     "storage_bucket": "stocks-95f7e.appspot.com"
   },
@@ -9,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:558262318409:android:ca51cb591c60e1f79dd698",
         "android_client_info": {
-          "package_name": "com.example.stocks"
+          "package_name": "com.example.fuck"
         }
       },
       "oauth_client": [
@@ -17,7 +18,7 @@
           "client_id": "558262318409-vkmmhoo5l9vlmvugfodtb0trdnj5rmdj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.stocks",
+            "package_name": "com.example.fuck",
             "certificate_hash": "18352591a50e24436e8c3b34184cb6935c2c2faf"
           }
         },
