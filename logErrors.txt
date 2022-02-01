@@ -1,0 +1,39 @@
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:dataBindingMergeDependencyArtifactsDebug'.
+> Could not resolve all files for configuration ':app:debugCompileClasspath'.
+   > Could not find org.jetbrains.kotlin:kotlin-stdlib:1.6.0.
+     Required by:
+         project :app > androidx.navigation:navigation-fragment:2.4.0
+         project :app > androidx.navigation:navigation-runtime:2.4.0
+         project :app > androidx.navigation:navigation-common:2.4.0
+   > Could not find org.jetbrains.kotlin:kotlin-stdlib:1.6.0.
+     Required by:
+         project :app > androidx.fragment:fragment:1.4.0
+         project :app > androidx.fragment:fragment-ktx:1.4.0
+   > Could not find org.jetbrains.kotlin:kotlin-stdlib:1.6.0.
+     Required by:
+         project :app > androidx.core:core-ktx:1.2.0
+   > Could not find org.jetbrains.kotlin:kotlin-stdlib:1.6.0.
+     Required by:
+         project :app > androidx.activity:activity-ktx:1.2.3
+         project :app > androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.1
+         project :app > androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1
+         project :app > androidx.savedstate:savedstate-ktx:1.1.0
+         project :app > androidx.lifecycle:lifecycle-runtime-ktx:2.3.1
+   > Could not find org.jetbrains.kotlin:kotlin-stdlib:1.6.0.
+     Required by:
+         project :app > androidx.collection:collection-ktx:1.1.0
+   > Could not find org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1.
+     Required by:
+         project :app > androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1
+         project :app > androidx.lifecycle:lifecycle-runtime-ktx:2.3.1
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 3s

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Stocks">
         <activity
-            android:name=".MainActivity"
+            android:name=".RegistrationActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Stocks.NoActionBar">
