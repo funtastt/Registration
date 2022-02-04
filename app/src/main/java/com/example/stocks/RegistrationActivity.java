@@ -90,8 +90,19 @@ public class RegistrationActivity extends AppCompatActivity {
         FirebaseDatabase database = getFirebaseDatabase();
         DatabaseReference userRef = database.getReference(login);
 
-        userRef.setValue(user);
-        Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Toast.makeText(RegistrationActivity.this, "User with this login is already registered", Toast.LENGTH_SHORT).show();
+                } else {
+                    userRef.setValue(user);
+                    Toast.makeText(RegistrationActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 
     private class User {
