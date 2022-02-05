@@ -12,7 +12,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/registration_text"
@@ -21,7 +21,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="50dp"
-                android:text="Registration"
+                android:text="@string/registration"
                 android:textColor="@color/black"
                 android:textSize="40sp" />
 
@@ -32,8 +32,9 @@
                 android:layout_below="@+id/registration_text"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="60dp"
-                android:hint="Name"
+                android:inputType="textPersonName"
+                android:layout_marginTop="50dp"
+                android:hint="@string/name"
                 android:textAlignment="center"
                 android:textSize="18dp" />
 
@@ -44,10 +45,11 @@
                 android:layout_below="@+id/name_registration"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="60dp"
-                android:hint="Login"
+                android:layout_marginTop="50dp"
+                android:inputType="textPersonName"
+                android:hint="@string/login"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/password_registration"
@@ -56,11 +58,11 @@
                 android:layout_below="@+id/login_registration"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="60dp"
-                android:hint="Password"
+                android:layout_marginTop="50dp"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/sign_up_button"
@@ -68,8 +70,19 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/password_registration"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="60dp"
-                android:text="Sign up" />
+                android:layout_marginTop="50dp"
+                android:text="@string/sign_up" />
+
+            <TextView
+                android:id="@+id/log_in_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sign_up_button"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="@string/already_have_an_account_log_in"
+                android:textColor="#147cf0"
+                android:textSize="16sp" />
 
         </RelativeLayout>
     </ScrollView>
