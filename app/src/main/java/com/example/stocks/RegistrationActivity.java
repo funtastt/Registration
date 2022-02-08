@@ -2,7 +2,6 @@ package com.example.stocks;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         mSignUp.setOnClickListener(view -> signUp());
 
-        mLogInTextView.setOnClickListener(view -> logIn());
+        mLogInTextView.setOnClickListener(view -> goToLoginPage());
     }
 
     private FirebaseDatabase getFirebaseDatabase() {
@@ -69,13 +68,18 @@ public class RegistrationActivity extends AppCompatActivity {
                 Toast.makeText(RegistrationActivity.this, "User with this login is already registered", Toast.LENGTH_SHORT).show();
             } else {
                 userRef.setValue(user);
-                Toast.makeText(RegistrationActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                login();
             }
         });
     }
 
-    private void logIn() {
-        Intent loginIntent = new Intent(RegistrationActivity.this, LoginActivity.class);
+    private void goToLoginPage() {
+        Intent goToLoginPageIntent = new Intent(RegistrationActivity.this, LoginActivity.class);
+        startActivity(goToLoginPageIntent);
+    }
+
+    private void login() {
+        Intent loginIntent = new Intent(RegistrationActivity.this, MainPageActivity.class);
         startActivity(loginIntent);
     }
 }
