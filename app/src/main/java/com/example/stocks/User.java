@@ -1,17 +1,17 @@
 package com.example.stocks;
 
 class User {
-    private String login, password, name, profilePhoto;
+    private String login, password, name, profilePhotoLink;
     private double balance = 0.0;
 
     public User() {
     }
 
-    public User(String login, String password, String name, String profilePhoto) {
+    public User(String login, String password, String name, String profilePhotoLink) {
         this.login = login;
         this.password = password;
         this.name = name;
-        this.profilePhoto = profilePhoto;
+        this.profilePhotoLink = profilePhotoLink;
     }
 
     public String getLogin() {
@@ -46,11 +46,11 @@ class User {
         this.balance = balance;
     }
 
-    public String getProfilePhoto() {
-        return profilePhoto;
+    public String getProfilePhotoLink() {
+        return profilePhotoLink;
     }
 
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
+    public void setProfilePhotoLink(String profilePhoto) {
+        this.profilePhotoLink = profilePhotoLink;
     }
 }

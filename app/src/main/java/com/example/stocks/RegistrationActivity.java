@@ -17,7 +17,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText mLoginEditText, mPasswordEditText, mNameEditText;
     Button mSignUp;
 
-    String profileImageLink = "https://firebasestorage.googleapis.com/v0/b/stocks-95f7e.appspot.com/o/images%2Fuser.png?alt=media&token=99b47971-03f1-4ea8-b36b-59768692e3c7";
+    String profileImageLink = "user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 Toast.makeText(RegistrationActivity.this, "User with this login is already registered", Toast.LENGTH_SHORT).show();
             } else {
                 userRef.setValue(user);
-                login();
+                login(user);
             }
         });
     }
@@ -78,7 +78,8 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(goToLoginPageIntent);
     }
 
-    private void login() {
+    private void login(User user) {
+        CurrentUser.setUser(user);
         Intent loginIntent = new Intent(RegistrationActivity.this, MainPageActivity.class);
         startActivity(loginIntent);
     }

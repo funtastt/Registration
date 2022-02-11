@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 User user = dataSnapshot.getValue(User.class);
                 if (password.equals(user.getPassword())) {
-                    successfulLogin();
+                    successfulLogin(user);
                 } else {
                     Toast.makeText(LoginActivity.this, "The password is incorrect", Toast.LENGTH_SHORT).show();
                 }
@@ -74,7 +74,8 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(remindPasswordIntent);
     }
 
-    private void successfulLogin() {
+    private void successfulLogin(User user) {
+        CurrentUser.setUser(user);
         Intent mainPageIntent = new Intent(LoginActivity.this, MainPageActivity.class);
         startActivity(mainPageIntent);
     }
