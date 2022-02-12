@@ -42,4 +42,12 @@
     <string name="log_out">Log out</string>
     <string name="edit_profile">Edit profile</string>
     <string name="profile_image">Profile image</string>
+    <string name="submit">Submit</string>
+    <string name="change_name">Change name:</string>
+    <string name="change_login">Change login:</string>
+    <string name="change_profile_photo">Change profile photo:</string>
+    <string name="change_mail">Change mail:</string>
+    <string name="change_birthday">Change birthday:</string>
+    <string name="change_password"><u>Change password</u></string>
+    <string name="mail">Mail</string>
 </resources>

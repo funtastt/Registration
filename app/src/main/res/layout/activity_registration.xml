@@ -32,11 +32,11 @@
                 android:layout_below="@+id/registration_text"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="50dp"
-                android:inputType="textPersonName"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="40dp"
                 android:hint="@string/name"
+                android:inputType="textPersonName"
                 android:textAlignment="center"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/login_registration"
@@ -45,9 +45,22 @@
                 android:layout_below="@+id/name_registration"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="50dp"
-                android:inputType="textPersonName"
+                android:layout_marginTop="40dp"
                 android:hint="@string/login"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/mail_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/login_registration"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginTop="40dp"
+                android:hint="@string/mail"
+                android:inputType="textEmailAddress"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -55,10 +68,10 @@
                 android:id="@+id/password_registration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/login_registration"
+                android:layout_below="@+id/mail_registration"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="40dp"
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textAlignment="center"
@@ -70,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/password_registration"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="40dp"
                 android:text="@string/sign_up" />
 
             <TextView
@@ -81,7 +94,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:text="@string/already_have_an_account_log_in"
-                android:textColor="#147cf0"
+                android:textColor="@color/selector_txt"
                 android:textSize="16sp" />
 
         </RelativeLayout>

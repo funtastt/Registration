@@ -1,17 +1,22 @@
 package com.example.stocks;
 
-class User {
-    private String login, password, name, profilePhotoLink;
+import java.util.Date;
+
+public class User {
+    private String login, password, name, profilePhotoLink, mail;
     private double balance = 0.0;
+    private Date birthdayDate;
 
     public User() {
     }
 
-    public User(String login, String password, String name, String profilePhotoLink) {
+    public User(String login, String password, String name, String profilePhotoLink, String mail, Date birthdayDate) {
         this.login = login;
         this.password = password;
         this.name = name;
         this.profilePhotoLink = profilePhotoLink;
+        this.mail = mail;
+        this.birthdayDate = birthdayDate;
     }
 
     public String getLogin() {
@@ -50,7 +55,23 @@ class User {
         return profilePhotoLink;
     }
 
-    public void setProfilePhotoLink(String profilePhoto) {
+    public void setProfilePhotoLink(String profilePhotoLink) {
         this.profilePhotoLink = profilePhotoLink;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public Date getBirthdayDate() {
+        return birthdayDate;
+    }
+
+    public void setBirthdayDate(Date birthdayDate) {
+        this.birthdayDate = birthdayDate;
     }
 }
