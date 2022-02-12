@@ -62,7 +62,15 @@ public class MainPageActivity extends AppCompatActivity {
         userName = headerView.findViewById(R.id.user_name);
         currentUser = CurrentUser.getUser();
         userName.setText(currentUser.getName());
+        setProfilePhoto();
 
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main_page);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+    }
+
+    private void setProfilePhoto() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         currentUserProfileImage = storage.getReferenceFromUrl("gs://stocks-95f7e.appspot.com/images/" + currentUser.getProfilePhotoLink());
         try {
@@ -74,13 +82,6 @@ public class MainPageActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main_page);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-
     }
 
     @Override

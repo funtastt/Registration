@@ -24,11 +24,6 @@ public class RegistrationActivity extends AppCompatActivity {
     String profileImageLink = "user.png";
     Date birthdayDate = new Date();
 
-    private final Pattern MAIL_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    private final Pattern PASSWORD_REGEX = Pattern.compile("^[a-zA-Z0-9._\\-!@#$%^&*()=+\"№;:?']{3,}$");
-    private final Pattern LOGIN_REGEX = Pattern.compile("^[a-zA-Z0-9._\\-]{2,}$");
-    private final Pattern NAME_REGEX = Pattern.compile("^[a-zA-Z\\-]{2,}$");
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,22 +105,22 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private boolean validateMailString(String emailStr) {
-        Matcher matcher = MAIL_REGEX.matcher(emailStr);
+        Matcher matcher = Constants.MAIL_REGEX.matcher(emailStr);
         return matcher.find();
     }
 
     private boolean validateLoginString(String loginStr) {
-        Matcher matcher = LOGIN_REGEX.matcher(loginStr);
+        Matcher matcher = Constants.LOGIN_REGEX.matcher(loginStr);
         return matcher.find();
     }
 
     private boolean validatePasswordString(String passwordStr) {
-        Matcher matcher = PASSWORD_REGEX.matcher(passwordStr);
+        Matcher matcher = Constants.PASSWORD_REGEX.matcher(passwordStr);
         return matcher.find();
     }
 
     private boolean validateNameString(String nameStr) {
-        Matcher matcher = NAME_REGEX.matcher(nameStr);
+        Matcher matcher = Constants.NAME_REGEX.matcher(nameStr);
         return matcher.find();
     }
 }
