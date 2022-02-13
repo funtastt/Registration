@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void successfulLogin(User user) {
-        CurrentUser.setUser(user);
+        CurrentUser.setUser(user, false);
         Intent mainPageIntent = new Intent(LoginActivity.this, MainPageActivity.class);
         startActivity(mainPageIntent);
     }

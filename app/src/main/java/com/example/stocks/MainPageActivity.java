@@ -41,6 +41,7 @@ public class MainPageActivity extends AppCompatActivity {
     private ActivityMainPageBinding binding;
     User currentUser;
     StorageReference currentUserProfileImage;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +52,11 @@ public class MainPageActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.drawerLayout.findViewById(R.id.toolbar));
         DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        navigationView = binding.navView;
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_change_profile, R.id.nav_market, R.id.nav_top_up)
                 .setOpenableLayout(drawer)
                 .build();
-
-        View headerView = navigationView.getHeaderView(0);
-        userProfileImage = headerView.findViewById(R.id.user_profile_image);
-        userName = headerView.findViewById(R.id.user_name);
-        currentUser = CurrentUser.getUser();
-        userName.setText(currentUser.getName());
-        setProfilePhoto();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main_page);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -94,6 +88,12 @@ public class MainPageActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main_page);
+        View headerView = navigationView.getHeaderView(0);
+        userProfileImage = headerView.findViewById(R.id.user_profile_image);
+        userName = headerView.findViewById(R.id.user_name);
+        currentUser = CurrentUser.getUser();
+        userName.setText(currentUser.getName());
+        setProfilePhoto();
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

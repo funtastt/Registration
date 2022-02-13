@@ -1,5 +1,10 @@
 package com.example.stocks.ui.edit_profile;
 
+import static com.example.stocks.Constants.getFirebaseDatabase;
+import static com.example.stocks.Constants.validateLoginString;
+import static com.example.stocks.Constants.validateMailString;
+import static com.example.stocks.Constants.validateNameString;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,10 +24,9 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.stocks.ChangePasswordActivity;
 import com.example.stocks.CurrentUser;
-import com.example.stocks.MainPageActivity;
 import com.example.stocks.R;
-import com.example.stocks.RegistrationActivity;
 import com.example.stocks.User;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -40,10 +44,9 @@ public class EditProfileFragment extends Fragment {
     private ImageView mEditProfilePhoto;
 
     User mUser = CurrentUser.getUser();
+    DatabaseReference userRef;
 
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         editProfileFragment = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         mEditName = editProfileFragment.findViewById(R.id.edit_profile_name_editView);
         mEditLogin = editProfileFragment.findViewById(R.id.edit_profile_login_editView);
@@ -59,18 +62,20 @@ public class EditProfileFragment extends Fragment {
         mSubmitMailButton = editProfileFragment.findViewById(R.id.edit_profile_mail_button);
         mSubmitBirthdayButton = editProfileFragment.findViewById(R.id.edit_profile_birthday_button);
 
+        mSubmitNameButton.setOnClickListener(view -> submitUserName());
+        mSubmitLoginButton.setOnClickListener(view -> submitUserLogin());
+        mEditProfilePhoto.setOnClickListener(view -> choosePhotoFromGallery());
+        mSubmitProfilePhotoButton.setOnClickListener(view -> submitUserProfilePhoto());
+        mSubmitMailButton.setOnClickListener(view -> submitUserMail());
+        mSubmitBirthdayButton.setOnClickListener(view -> submitUserBirthday());
+
         mEditBirthday.setOnClickListener(view -> {
             FragmentManager manager = getChildFragmentManager();
             DatePickerFragment datePickerFragment = new DatePickerFragment();
             datePickerFragment.show(manager, "Choose birthday date:");
         });
 
-        mChangePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changePassword();
-            }
-        });
+        mChangePassword.setOnClickListener(view -> changePassword());
 
         initializeFields();
 
@@ -108,5 +113,63 @@ public class EditProfileFragment extends Fragment {
     private void changePassword() {
         Intent changePasswordIntent = new Intent(getContext(), ChangePasswordActivity.class);
         startActivity(changePasswordIntent);
+    }
+
+    private void submitUserName() {
+        String name = mEditName.getText().toString().trim();
+        if (!validateNameString(name)) {
+            Toast.makeText(getContext(), "Entered name is incorrect.", Toast.LENGTH_SHORT).show();
+        } else {
+            userRef = getFirebaseDatabase().getReference(mUser.getLogin());
+            mUser.setName(name);
+            CurrentUser.setUser(mUser, true);
+            userRef.setValue(mUser).addOnSuccessListener(unused ->
+                    Toast.makeText(getContext(), "Successfully changed your name!", Toast.LENGTH_SHORT).show());
+        }
+    }
+
+    private void submitUserLogin() {
+        String login = mEditLogin.getText().toString().trim();
+        if (!validateLoginString(login)) {
+            Toast.makeText(getContext(), "Entered login is incorrect.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        DatabaseReference enteredLoginUser = getFirebaseDatabase().getReference(login);
+        enteredLoginUser.get().addOnSuccessListener(dataSnapshot -> {
+            if (dataSnapshot.exists()){
+                Toast.makeText(getContext(), "User with entered login is already exists", Toast.LENGTH_SHORT).show();
+            } else {
+                userRef = getFirebaseDatabase().getReference(mUser.getLogin());
+                userRef.removeValue();
+                mUser.setLogin(login);
+                CurrentUser.setUser(mUser, true);
+                enteredLoginUser.setValue(mUser);
+                Toast.makeText(getContext(), "Successfully changed your login!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void choosePhotoFromGallery() {
+
+    }
+
+    private void submitUserProfilePhoto() {
+    }
+
+    private void submitUserMail() {
+        String mail = mEditMail.getText().toString().trim();
+        if (!validateMailString(mail)) {
+            Toast.makeText(getContext(), "Entered mail is incorrect.", Toast.LENGTH_SHORT).show();
+        } else {
+            userRef = getFirebaseDatabase().getReference(mUser.getLogin());
+            mUser.setMail(mail);
+            CurrentUser.setUser(mUser, true);
+            userRef.setValue(mUser).addOnSuccessListener(unused ->
+                    Toast.makeText(getContext(), "Successfully changed your mail!", Toast.LENGTH_SHORT).show());
+            CurrentUser.setUser(mUser, true);
+        }
+    }
+
+    private void submitUserBirthday() {
     }
 }

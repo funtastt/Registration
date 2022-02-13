@@ -1,5 +1,7 @@
 package com.example.stocks;
 
+import static com.example.stocks.Constants.*;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -13,8 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
     TextView mRegistrationTextView, mLogInTextView;
@@ -40,10 +40,6 @@ public class RegistrationActivity extends AppCompatActivity {
         mSignUp.setOnClickListener(view -> signUp());
 
         mLogInTextView.setOnClickListener(view -> goToLoginPage());
-    }
-
-    private FirebaseDatabase getFirebaseDatabase() {
-        return FirebaseDatabase.getInstance("https://stocks-95f7e-default-rtdb.europe-west1.firebasedatabase.app//");
     }
 
     private void signUp() {
@@ -99,28 +95,8 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void login(User user) {
-        CurrentUser.setUser(user);
+        CurrentUser.setUser(user, false);
         Intent loginIntent = new Intent(RegistrationActivity.this, MainPageActivity.class);
         startActivity(loginIntent);
-    }
-
-    private boolean validateMailString(String emailStr) {
-        Matcher matcher = Constants.MAIL_REGEX.matcher(emailStr);
-        return matcher.find();
-    }
-
-    private boolean validateLoginString(String loginStr) {
-        Matcher matcher = Constants.LOGIN_REGEX.matcher(loginStr);
-        return matcher.find();
-    }
-
-    private boolean validatePasswordString(String passwordStr) {
-        Matcher matcher = Constants.PASSWORD_REGEX.matcher(passwordStr);
-        return matcher.find();
-    }
-
-    private boolean validateNameString(String nameStr) {
-        Matcher matcher = Constants.NAME_REGEX.matcher(nameStr);
-        return matcher.find();
     }
 }
