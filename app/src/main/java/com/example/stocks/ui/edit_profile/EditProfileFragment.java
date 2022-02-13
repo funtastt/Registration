@@ -1,5 +1,6 @@
 package com.example.stocks.ui.edit_profile;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.stocks.Constants.getFirebaseDatabase;
 import static com.example.stocks.Constants.validateLoginString;
 import static com.example.stocks.Constants.validateMailString;
@@ -8,7 +9,9 @@ import static com.example.stocks.Constants.validateNameString;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +25,24 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.example.stocks.ChangePasswordActivity;
 import com.example.stocks.CurrentUser;
 import com.example.stocks.R;
 import com.example.stocks.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 
 public class EditProfileFragment extends Fragment {
@@ -42,6 +52,8 @@ public class EditProfileFragment extends Fragment {
     private TextView mChangePassword;
     private Button mSubmitNameButton, mSubmitLoginButton, mSubmitProfilePhotoButton, mSubmitMailButton, mSubmitBirthdayButton;
     private ImageView mEditProfilePhoto;
+
+    private Uri resultUri = null;
 
     User mUser = CurrentUser.getUser();
     DatabaseReference userRef;
@@ -136,7 +148,7 @@ public class EditProfileFragment extends Fragment {
         }
         DatabaseReference enteredLoginUser = getFirebaseDatabase().getReference(login);
         enteredLoginUser.get().addOnSuccessListener(dataSnapshot -> {
-            if (dataSnapshot.exists()){
+            if (dataSnapshot.exists()) {
                 Toast.makeText(getContext(), "User with entered login is already exists", Toast.LENGTH_SHORT).show();
             } else {
                 userRef = getFirebaseDatabase().getReference(mUser.getLogin());
@@ -150,10 +162,28 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void choosePhotoFromGallery() {
-
+        CropImage.activity()
+                .setAspectRatio(1, 1)
+                .start(getContext(), this);
     }
 
     private void submitUserProfilePhoto() {
+        if (resultUri != null) {
+            String profilePhotoLink = UUID.randomUUID().toString();
+            StorageReference reference = FirebaseStorage.getInstance().getReference()
+                    .child("images/" + profilePhotoLink);
+
+            reference.putFile(resultUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        userRef = getFirebaseDatabase().getReference(mUser.getLogin());
+                        mUser.setProfilePhotoLink(profilePhotoLink);
+                        CurrentUser.setUser(mUser, true);
+                        userRef.setValue(mUser);
+                        resultUri = null;
+                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure!", Toast.LENGTH_SHORT).show());
+        }
     }
 
     private void submitUserMail() {
@@ -171,5 +201,19 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void submitUserBirthday() {
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                resultUri = result.getUri();
+                mEditProfilePhoto.setImageURI(resultUri);
+                Log.d("Error", String.valueOf(resultUri));
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
     }
 }
