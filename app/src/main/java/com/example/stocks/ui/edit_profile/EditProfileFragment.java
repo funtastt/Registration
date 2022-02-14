@@ -1,17 +1,13 @@
 package com.example.stocks.ui.edit_profile;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.stocks.Constants.getFirebaseDatabase;
-import static com.example.stocks.Constants.validateLoginString;
-import static com.example.stocks.Constants.validateMailString;
-import static com.example.stocks.Constants.validateNameString;
+import static com.example.stocks.Constants.*;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,19 +21,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.bumptech.glide.Glide;
 import com.example.stocks.ChangePasswordActivity;
 import com.example.stocks.CurrentUser;
 import com.example.stocks.R;
 import com.example.stocks.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,10 +44,12 @@ public class EditProfileFragment extends Fragment {
     private Button mSubmitNameButton, mSubmitLoginButton, mSubmitProfilePhotoButton, mSubmitMailButton, mSubmitBirthdayButton;
     private ImageView mEditProfilePhoto;
 
-    private Uri resultUri = null;
-
     User mUser = CurrentUser.getUser();
     DatabaseReference userRef;
+
+    private Uri resultUri = null;
+    private long birthdayDate = mUser.getBirthdayDate();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         editProfileFragment = inflater.inflate(R.layout.fragment_edit_profile, container, false);
@@ -81,12 +74,7 @@ public class EditProfileFragment extends Fragment {
         mSubmitMailButton.setOnClickListener(view -> submitUserMail());
         mSubmitBirthdayButton.setOnClickListener(view -> submitUserBirthday());
 
-        mEditBirthday.setOnClickListener(view -> {
-            FragmentManager manager = getChildFragmentManager();
-            DatePickerFragment datePickerFragment = new DatePickerFragment();
-            datePickerFragment.show(manager, "Choose birthday date:");
-        });
-
+        mEditBirthday.setOnClickListener(view -> editBirthdayDay());
         mChangePassword.setOnClickListener(view -> changePassword());
 
         initializeFields();
@@ -173,14 +161,15 @@ public class EditProfileFragment extends Fragment {
             StorageReference reference = FirebaseStorage.getInstance().getReference()
                     .child("images/" + profilePhotoLink);
 
+            Toast.makeText(getContext(), "Changing profile photo.\nIt may take some time...", Toast.LENGTH_SHORT).show();
             reference.putFile(resultUri)
                     .addOnSuccessListener(taskSnapshot -> {
                         userRef = getFirebaseDatabase().getReference(mUser.getLogin());
                         mUser.setProfilePhotoLink(profilePhotoLink);
                         CurrentUser.setUser(mUser, true);
+                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
                         userRef.setValue(mUser);
                         resultUri = null;
-                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure!", Toast.LENGTH_SHORT).show());
         }
@@ -201,18 +190,40 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void submitUserBirthday() {
+        userRef = getFirebaseDatabase().getReference(mUser.getLogin());
+        mUser.setBirthdayDate(birthdayDate);
+        CurrentUser.setUser(mUser, true);
+        userRef.setValue(mUser).addOnSuccessListener(unused ->
+                Toast.makeText(getContext(), "Successfully changed your birthday date!", Toast.LENGTH_SHORT).show());
+        CurrentUser.setUser(mUser, true);
+    }
+
+    private void editBirthdayDay() {
+        FragmentManager manager = getFragmentManager();
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setTargetFragment(this, BIRTHDAY_PICKER_REQUEST_CODE);
+
+        Bundle args = new Bundle();
+        args.putLong(INITIAL_BIRTHDAY_DATE, birthdayDate);
+        datePickerFragment.setArguments(args);
+
+        datePickerFragment.show(manager, "Choose birthday date:");
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                resultUri = result.getUri();
-                mEditProfilePhoto.setImageURI(resultUri);
-                Log.d("Error", String.valueOf(resultUri));
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    resultUri = result.getUri();
+                    mEditProfilePhoto.setImageURI(resultUri);
+                    break;
+                case BIRTHDAY_PICKER_REQUEST_CODE:
+                    birthdayDate = data.getLongExtra(CHOOSE_BIRTHDAY_DATE, 0);
+                    mEditBirthday.setText(new SimpleDateFormat("dd.MM.yyyy").format(birthdayDate));
+                    break;
             }
         }
     }

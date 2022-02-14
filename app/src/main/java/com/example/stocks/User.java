@@ -5,12 +5,12 @@ import java.util.Date;
 public class User {
     private String login, password, name, profilePhotoLink, mail;
     private double balance = 0.0;
-    private Date birthdayDate;
+    private long birthdayDate;
 
     public User() {
     }
 
-    public User(String login, String password, String name, String profilePhotoLink, String mail, Date birthdayDate) {
+    public User(String login, String password, String name, String profilePhotoLink, String mail, long birthdayDate) {
         this.login = login;
         this.password = password;
         this.name = name;
@@ -67,11 +67,11 @@ public class User {
         this.mail = mail;
     }
 
-    public Date getBirthdayDate() {
+    public long getBirthdayDate() {
         return birthdayDate;
     }
 
-    public void setBirthdayDate(Date birthdayDate) {
+    public void setBirthdayDate(long birthdayDate) {
         this.birthdayDate = birthdayDate;
     }
 }

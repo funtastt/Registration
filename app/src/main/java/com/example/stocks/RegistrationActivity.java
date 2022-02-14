@@ -22,7 +22,7 @@ public class RegistrationActivity extends AppCompatActivity {
     Button mSignUp;
 
     String profileImageLink = "user.png";
-    Date birthdayDate = new Date();
+    long birthdayDate = new Date().getTime();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
