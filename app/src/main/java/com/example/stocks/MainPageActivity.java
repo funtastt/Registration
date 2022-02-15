@@ -2,14 +2,13 @@ package com.example.stocks;
 
 import static com.example.stocks.Constants.convertStringToBitMap;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -20,20 +19,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.stocks.databinding.ActivityMainPageBinding;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
-import java.io.IOException;
 
 public class MainPageActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     ImageView userProfileImage;
-    TextView userName;
+    TextView userNameTextview, logOutTextview;
     private ActivityMainPageBinding binding;
     User currentUser;
-    StorageReference currentUserProfileImage;
     NavigationView navigationView;
 
     @Override
@@ -59,7 +52,6 @@ public class MainPageActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_page, menu);
         return true;
     }
@@ -69,9 +61,11 @@ public class MainPageActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main_page);
         View headerView = navigationView.getHeaderView(0);
         userProfileImage = headerView.findViewById(R.id.user_profile_image);
-        userName = headerView.findViewById(R.id.user_name);
+        userNameTextview = headerView.findViewById(R.id.user_name);
+        logOutTextview = navigationView.findViewById(R.id.logout);
         currentUser = CurrentUser.getUser();
-        userName.setText(currentUser.getName());
+        userNameTextview.setText(currentUser.getName());
+        logOutTextview.setOnClickListener(view -> logOut());
         setProfilePhoto();
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
@@ -81,5 +75,11 @@ public class MainPageActivity extends AppCompatActivity {
         String profileImageBitmapString = currentUser.getProfilePhotoLink();;
         Bitmap profileImageBitmap = convertStringToBitMap(profileImageBitmapString);
         userProfileImage.setImageBitmap(profileImageBitmap);
+    }
+
+    // Todo: Implement the logic of not being able to return to the profile page after logging out
+    private void logOut() {
+        Intent intent = new Intent(MainPageActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 }

@@ -39,6 +39,7 @@ public class RegistrationActivity extends AppCompatActivity {
         mMailEditText = findViewById(R.id.mail_registration);
         mSignUp = findViewById(R.id.sign_up_button);
 
+        // TODO: Implement disabling repeatedly pressing the button logic
         mSignUp.setOnClickListener(view -> signUp());
         mLogInTextView.setOnClickListener(view -> goToLoginPage());
 

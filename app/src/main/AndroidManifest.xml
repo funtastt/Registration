@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Stocks">
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name=".ui.edit_profile.ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".MainPageActivity"

@@ -79,4 +79,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent mainPageIntent = new Intent(LoginActivity.this, MainPageActivity.class);
         startActivity(mainPageIntent);
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

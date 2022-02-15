@@ -13,12 +13,9 @@ import static com.example.stocks.Constants.validateNameString;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +29,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.stocks.ChangePasswordActivity;
 import com.example.stocks.CurrentUser;
 import com.example.stocks.R;
 import com.example.stocks.User;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 
@@ -53,6 +45,7 @@ public class EditProfileFragment extends Fragment {
     private TextView mChangePassword;
     private Button mSubmitNameButton, mSubmitLoginButton, mSubmitProfilePhotoButton, mSubmitMailButton, mSubmitBirthdayButton;
     private ImageView mEditProfilePhoto;
+    private String currentUserProfileImageBitmapString;
 
     User mUser = CurrentUser.getUser();
     DatabaseReference userRef;
@@ -107,10 +100,12 @@ public class EditProfileFragment extends Fragment {
 
     private void setProfilePhoto() {
         String profileImageBitmapString = mUser.getProfilePhotoLink();
+        currentUserProfileImageBitmapString = mUser.getProfilePhotoLink();
         Bitmap profileImageBitmap = convertStringToBitMap(profileImageBitmapString);
         mEditProfilePhoto.setImageBitmap(profileImageBitmap);
     }
 
+    // Todo: Implement password change logic
     private void changePassword() {
         Intent changePasswordIntent = new Intent(getContext(), ChangePasswordActivity.class);
         startActivity(changePasswordIntent);
@@ -118,6 +113,8 @@ public class EditProfileFragment extends Fragment {
 
     private void submitUserName() {
         String name = mEditName.getText().toString().trim();
+        String currentUserName = mUser.getName();
+        if (name.equals(currentUserName)) return;
         if (!validateNameString(name)) {
             Toast.makeText(getContext(), "Entered name is incorrect.", Toast.LENGTH_SHORT).show();
         } else {
@@ -157,8 +154,14 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void submitUserProfilePhoto() {
-        Bitmap photoBitmap = ((BitmapDrawable) mEditProfilePhoto.getDrawable()).getBitmap();
-        String profileImageBitmapString = convertBitmapToString(photoBitmap);
+        Bitmap profileImageBitmap = ((BitmapDrawable) mEditProfilePhoto.getDrawable()).getBitmap();
+        String profileImageBitmapString = convertBitmapToString(profileImageBitmap);
+        if (profileImageBitmapString.equals(currentUserProfileImageBitmapString)) {
+            Toast.makeText(getContext(), "hahhahahaha", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            currentUserProfileImageBitmapString = profileImageBitmapString;
+        }
         userRef = getFirebaseDatabase().getReference(mUser.getLogin());
         mUser.setProfilePhotoLink(profileImageBitmapString);
         CurrentUser.setUser(mUser, true);
@@ -169,6 +172,8 @@ public class EditProfileFragment extends Fragment {
 
     private void submitUserMail() {
         String mail = mEditMail.getText().toString().trim();
+        String currentUserMail = mUser.getMail();
+        if (mail.equals(currentUserMail)) return;
         if (!validateMailString(mail)) {
             Toast.makeText(getContext(), "Entered mail is incorrect.", Toast.LENGTH_SHORT).show();
         } else {
@@ -182,6 +187,8 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void submitUserBirthday() {
+        long currentUserBirthdayDate = mUser.getBirthdayDate();
+        if (currentUserBirthdayDate == birthdayDate) return;
         userRef = getFirebaseDatabase().getReference(mUser.getLogin());
         mUser.setBirthdayDate(birthdayDate);
         CurrentUser.setUser(mUser, true);

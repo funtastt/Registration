@@ -1,8 +1,10 @@
-package com.example.stocks;
+package com.example.stocks.ui.edit_profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.stocks.R;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
