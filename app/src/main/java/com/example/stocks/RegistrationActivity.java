@@ -3,6 +3,8 @@ package com.example.stocks;
 import static com.example.stocks.Constants.*;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +23,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText mLoginEditText, mPasswordEditText, mNameEditText, mMailEditText;
     Button mSignUp;
 
-    String profileImageLink = "user.png";
+    String defaultProfileImageBitmapString;
     long birthdayDate = new Date().getTime();
 
     @Override
@@ -38,8 +40,9 @@ public class RegistrationActivity extends AppCompatActivity {
         mSignUp = findViewById(R.id.sign_up_button);
 
         mSignUp.setOnClickListener(view -> signUp());
-
         mLogInTextView.setOnClickListener(view -> goToLoginPage());
+
+        getDefaultProfilePhotoBitmap();
     }
 
     private void signUp() {
@@ -74,7 +77,7 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        User user = new User(login, password, name, profileImageLink, mail, birthdayDate);
+        User user = new User(login, password, name, defaultProfileImageBitmapString, mail, birthdayDate);
 
         FirebaseDatabase database = getFirebaseDatabase();
         DatabaseReference userRef = database.getReference(login);
@@ -98,5 +101,10 @@ public class RegistrationActivity extends AppCompatActivity {
         CurrentUser.setUser(user, false);
         Intent loginIntent = new Intent(RegistrationActivity.this, MainPageActivity.class);
         startActivity(loginIntent);
+    }
+
+    private void getDefaultProfilePhotoBitmap() {
+        Bitmap defaultProfileImageBitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.user);
+        defaultProfileImageBitmapString = convertBitmapToString(defaultProfileImageBitmap);
     }
 }

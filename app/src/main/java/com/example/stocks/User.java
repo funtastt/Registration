@@ -1,9 +1,7 @@
 package com.example.stocks;
 
-import java.util.Date;
-
 public class User {
-    private String login, password, name, profilePhotoLink, mail;
+    private String login, password, name, mail, profilePhotoLink;
     private double balance = 0.0;
     private long birthdayDate;
 

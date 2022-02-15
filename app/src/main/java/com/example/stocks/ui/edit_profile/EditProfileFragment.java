@@ -1,13 +1,24 @@
 package com.example.stocks.ui.edit_profile;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.stocks.Constants.*;
+import static com.example.stocks.Constants.BIRTHDAY_PICKER_REQUEST_CODE;
+import static com.example.stocks.Constants.CHOOSE_BIRTHDAY_DATE;
+import static com.example.stocks.Constants.INITIAL_BIRTHDAY_DATE;
+import static com.example.stocks.Constants.convertBitmapToString;
+import static com.example.stocks.Constants.convertStringToBitMap;
+import static com.example.stocks.Constants.getFirebaseDatabase;
+import static com.example.stocks.Constants.validateLoginString;
+import static com.example.stocks.Constants.validateMailString;
+import static com.example.stocks.Constants.validateNameString;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +44,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.UUID;
 
 
 public class EditProfileFragment extends Fragment {
@@ -47,7 +57,6 @@ public class EditProfileFragment extends Fragment {
     User mUser = CurrentUser.getUser();
     DatabaseReference userRef;
 
-    private Uri resultUri = null;
     private long birthdayDate = mUser.getBirthdayDate();
 
 
@@ -97,17 +106,9 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void setProfilePhoto() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference currentUserProfileImage = storage.getReferenceFromUrl("gs://stocks-95f7e.appspot.com/images/" + mUser.getProfilePhotoLink());
-        try {
-            final File file = File.createTempFile("currentUserProfileImage", "png");
-            currentUserProfileImage.getFile(file).addOnSuccessListener(taskSnapshot -> {
-                Bitmap userProfileImageBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                mEditProfilePhoto.setImageBitmap(userProfileImageBitmap);
-            }).addOnFailureListener(e -> Toast.makeText(getContext(), "Failure!!!", Toast.LENGTH_SHORT).show());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String profileImageBitmapString = mUser.getProfilePhotoLink();
+        Bitmap profileImageBitmap = convertStringToBitMap(profileImageBitmapString);
+        mEditProfilePhoto.setImageBitmap(profileImageBitmap);
     }
 
     private void changePassword() {
@@ -156,23 +157,14 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void submitUserProfilePhoto() {
-        if (resultUri != null) {
-            String profilePhotoLink = UUID.randomUUID().toString();
-            StorageReference reference = FirebaseStorage.getInstance().getReference()
-                    .child("images/" + profilePhotoLink);
-
-            Toast.makeText(getContext(), "Changing profile photo.\nIt may take some time...", Toast.LENGTH_SHORT).show();
-            reference.putFile(resultUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        userRef = getFirebaseDatabase().getReference(mUser.getLogin());
-                        mUser.setProfilePhotoLink(profilePhotoLink);
-                        CurrentUser.setUser(mUser, true);
-                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-                        userRef.setValue(mUser);
-                        resultUri = null;
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure!", Toast.LENGTH_SHORT).show());
-        }
+        Bitmap photoBitmap = ((BitmapDrawable) mEditProfilePhoto.getDrawable()).getBitmap();
+        String profileImageBitmapString = convertBitmapToString(photoBitmap);
+        userRef = getFirebaseDatabase().getReference(mUser.getLogin());
+        mUser.setProfilePhotoLink(profileImageBitmapString);
+        CurrentUser.setUser(mUser, true);
+        userRef.setValue(mUser).addOnSuccessListener(unused ->
+                Toast.makeText(getContext(), "Successfully changed your profile photo!", Toast.LENGTH_SHORT).show());
+        CurrentUser.setUser(mUser, true);
     }
 
     private void submitUserMail() {
@@ -215,14 +207,14 @@ public class EditProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    resultUri = result.getUri();
-                    mEditProfilePhoto.setImageURI(resultUri);
-                    break;
                 case BIRTHDAY_PICKER_REQUEST_CODE:
                     birthdayDate = data.getLongExtra(CHOOSE_BIRTHDAY_DATE, 0);
                     mEditBirthday.setText(new SimpleDateFormat("dd.MM.yyyy").format(birthdayDate));
+                    break;
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    Uri resultUri = result.getUri();
+                    mEditProfilePhoto.setImageURI(resultUri);
                     break;
             }
         }

@@ -1,32 +1,25 @@
 package com.example.stocks;
 
-import android.annotation.SuppressLint;
+import static com.example.stocks.Constants.convertStringToBitMap;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.stocks.databinding.ActivityMainPageBinding;
-import com.google.firebase.storage.FileDownloadTask;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -64,20 +57,6 @@ public class MainPageActivity extends AppCompatActivity {
 
     }
 
-    private void setProfilePhoto() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        currentUserProfileImage = storage.getReferenceFromUrl("gs://stocks-95f7e.appspot.com/images/" + currentUser.getProfilePhotoLink());
-        try {
-            final File file = File.createTempFile("currentUserProfileImage", "png");
-            currentUserProfileImage.getFile(file).addOnSuccessListener(taskSnapshot -> {
-                Bitmap userProfileImageBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                userProfileImage.setImageBitmap(userProfileImageBitmap);
-            }).addOnFailureListener(e -> Toast.makeText(MainPageActivity.this, "Failure!!!", Toast.LENGTH_SHORT).show());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -98,4 +77,9 @@ public class MainPageActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    private void setProfilePhoto() {
+        String profileImageBitmapString = currentUser.getProfilePhotoLink();;
+        Bitmap profileImageBitmap = convertStringToBitMap(profileImageBitmapString);
+        userProfileImage.setImageBitmap(profileImageBitmap);
+    }
 }

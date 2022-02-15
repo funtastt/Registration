@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (password.equals(user.getPassword())) {
                     successfulLogin(user);
                 } else {
-                    Toast.makeText(LoginActivity.this, "The password is incorrect", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "The password or the login is incorrect", Toast.LENGTH_SHORT).show();
                 }
             }
         });
