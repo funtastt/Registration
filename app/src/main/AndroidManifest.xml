@@ -19,7 +19,9 @@
             android:name=".MainPageActivity"
             android:exported="true"
             android:label="@string/title_activity_main_page"
-            android:theme="@style/Theme.Stocks.NoActionBar"></activity>
+            android:theme="@style/Theme.Stocks.NoActionBar">
+
+        </activity>
         <activity
             android:name=".RemindPasswordActivity"
             android:exported="false" />
@@ -28,17 +30,17 @@
             android:exported="true"
             android:label="Login Activity"
             android:theme="@style/Theme.Stocks.NoActionBar">
-
-        </activity>
-        <activity
-            android:name=".RegistrationActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Stocks.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".RegistrationActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Stocks.NoActionBar">
+
         </activity>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>

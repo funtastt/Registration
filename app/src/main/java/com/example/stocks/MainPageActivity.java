@@ -1,15 +1,19 @@
 package com.example.stocks;
 
 import static com.example.stocks.Constants.convertStringToBitMap;
+import static com.example.stocks.Constants.getFirebaseDatabase;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -18,7 +22,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.stocks.databinding.ActivityMainPageBinding;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
 
 public class MainPageActivity extends AppCompatActivity {
 
@@ -77,7 +83,6 @@ public class MainPageActivity extends AppCompatActivity {
         userProfileImage.setImageBitmap(profileImageBitmap);
     }
 
-    // Todo: Implement the logic of not being able to return to the profile page after logging out
     private void logOut() {
         Intent intent = new Intent(MainPageActivity.this, LoginActivity.class);
         startActivity(intent);

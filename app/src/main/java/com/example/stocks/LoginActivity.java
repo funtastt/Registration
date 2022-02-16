@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextView mLogInTextView, mForgotPasswordTextView;
+    TextView mLogInTextView, mForgotPasswordTextView, mBackToRegistrationPageTextView;
     EditText mLoginEditText, mPasswordEditText;
     Button mLoginButton;
 
@@ -30,10 +30,16 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordEditText = findViewById(R.id.password_login);
         mLoginButton = findViewById(R.id.log_in_button);
         mForgotPasswordTextView = findViewById(R.id.forgot_password_text);
+        mBackToRegistrationPageTextView = findViewById(R.id.back_to_registration_text);
         
         mLoginButton.setOnClickListener(view -> login());
         
         mForgotPasswordTextView.setOnClickListener(view -> remindPassword());
+
+        mBackToRegistrationPageTextView.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+            startActivity(intent);
+        });
     }
 
     private FirebaseDatabase getFirebaseDatabase() {
