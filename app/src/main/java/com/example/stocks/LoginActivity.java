@@ -2,8 +2,6 @@ package com.example.stocks;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -19,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView mLogInTextView, mForgotPasswordTextView, mBackToRegistrationPageTextView;
     EditText mLoginEditText, mPasswordEditText;
     Button mLoginButton;
+    UserCredentialsDatabaseHandler mUserCredentialsHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton.setOnClickListener(view -> login());
         
         mForgotPasswordTextView.setOnClickListener(view -> remindPassword());
+
+        mUserCredentialsHandler = new UserCredentialsDatabaseHandler(this);
 
         mBackToRegistrationPageTextView.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -82,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void successfulLogin(User user) {
         CurrentUser.setUser(user, false);
+        mUserCredentialsHandler.addUser(user);
         Intent mainPageIntent = new Intent(LoginActivity.this, MainPageActivity.class);
         startActivity(mainPageIntent);
     }

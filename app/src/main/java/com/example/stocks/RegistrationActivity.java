@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -25,6 +26,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     String defaultProfileImageBitmapString;
     long birthdayDate = new Date().getTime();
+    UserCredentialsDatabaseHandler mUserCredentialsHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class RegistrationActivity extends AppCompatActivity {
         mSignUp.setOnClickListener(view -> signUp());
         mLogInTextView.setOnClickListener(view -> goToLoginPage());
 
+        mUserCredentialsHandler = new UserCredentialsDatabaseHandler(this);
         getDefaultProfilePhotoBitmap();
     }
 
@@ -78,7 +81,7 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        User user = new User(login, password, name, defaultProfileImageBitmapString, mail, birthdayDate);
+        User user = new User(login, password, name, mail, birthdayDate, defaultProfileImageBitmapString);
 
         FirebaseDatabase database = getFirebaseDatabase();
         DatabaseReference userRef = database.getReference(login);
@@ -100,6 +103,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void login(User user) {
         CurrentUser.setUser(user, false);
+        mUserCredentialsHandler.addUser(user);
+
         Intent loginIntent = new Intent(RegistrationActivity.this, MainPageActivity.class);
         startActivity(loginIntent);
     }
@@ -107,5 +112,10 @@ public class RegistrationActivity extends AppCompatActivity {
     private void getDefaultProfilePhotoBitmap() {
         Bitmap defaultProfileImageBitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.user);
         defaultProfileImageBitmapString = convertBitmapToString(defaultProfileImageBitmap);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

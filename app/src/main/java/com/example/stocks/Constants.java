@@ -3,7 +3,9 @@ package com.example.stocks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 
+import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
@@ -19,6 +21,9 @@ public class Constants {
     public static final int BIRTHDAY_PICKER_REQUEST_CODE = 1;
     public static final String CHOOSE_BIRTHDAY_DATE = "chooseBirthdayDate";
     public static final String INITIAL_BIRTHDAY_DATE = "initialBirthdayDate";
+
+    public static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "user_data.db";
 
     public static boolean validateMailString(String emailStr) {
         Matcher matcher = Constants.MAIL_REGEX.matcher(emailStr);

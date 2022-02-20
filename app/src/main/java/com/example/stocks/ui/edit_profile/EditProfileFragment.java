@@ -32,6 +32,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.stocks.CurrentUser;
 import com.example.stocks.R;
 import com.example.stocks.User;
+import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -49,6 +50,8 @@ public class EditProfileFragment extends Fragment {
 
     User mUser = CurrentUser.getUser();
     DatabaseReference userRef;
+
+    UserCredentialsDatabaseHandler mUserCredentialsHandler;
 
     private long birthdayDate = mUser.getBirthdayDate();
 
@@ -78,6 +81,8 @@ public class EditProfileFragment extends Fragment {
 
         mEditBirthday.setOnClickListener(view -> editBirthdayDay());
         mChangePassword.setOnClickListener(view -> changePassword());
+
+        mUserCredentialsHandler = new UserCredentialsDatabaseHandler(getContext());
 
         initializeFields();
 
@@ -120,9 +125,7 @@ public class EditProfileFragment extends Fragment {
         } else {
             userRef = getFirebaseDatabase().getReference(mUser.getLogin());
             mUser.setName(name);
-            CurrentUser.setUser(mUser, true);
-            userRef.setValue(mUser).addOnSuccessListener(unused ->
-                    Toast.makeText(getContext(), "Successfully changed your name!", Toast.LENGTH_SHORT).show());
+            afterSuccessfulSubmittingChanges();
         }
     }
 
@@ -132,8 +135,8 @@ public class EditProfileFragment extends Fragment {
             Toast.makeText(getContext(), "Entered login is incorrect.", Toast.LENGTH_SHORT).show();
             return;
         }
-        DatabaseReference enteredLoginUser = getFirebaseDatabase().getReference(login);
-        enteredLoginUser.get().addOnSuccessListener(dataSnapshot -> {
+        DatabaseReference changedLoginUserRef = getFirebaseDatabase().getReference(login);
+        changedLoginUserRef.get().addOnSuccessListener(dataSnapshot -> {
             if (dataSnapshot.exists()) {
                 Toast.makeText(getContext(), "User with entered login is already exists", Toast.LENGTH_SHORT).show();
             } else {
@@ -141,8 +144,9 @@ public class EditProfileFragment extends Fragment {
                 userRef.removeValue();
                 mUser.setLogin(login);
                 CurrentUser.setUser(mUser, true);
-                enteredLoginUser.setValue(mUser);
-                Toast.makeText(getContext(), "Successfully changed your login!", Toast.LENGTH_SHORT).show();
+                changedLoginUserRef.setValue(mUser);
+                Toast.makeText(getContext(), "Successfully changed your data!", Toast.LENGTH_SHORT).show();
+                mUserCredentialsHandler.updateUser(mUser);
             }
         });
     }
@@ -157,17 +161,13 @@ public class EditProfileFragment extends Fragment {
         Bitmap profileImageBitmap = ((BitmapDrawable) mEditProfilePhoto.getDrawable()).getBitmap();
         String profileImageBitmapString = convertBitmapToString(profileImageBitmap);
         if (profileImageBitmapString.equals(currentUserProfileImageBitmapString)) {
-            Toast.makeText(getContext(), "hahhahahaha", Toast.LENGTH_SHORT).show();
             return;
         } else {
             currentUserProfileImageBitmapString = profileImageBitmapString;
         }
         userRef = getFirebaseDatabase().getReference(mUser.getLogin());
         mUser.setProfilePhotoLink(profileImageBitmapString);
-        CurrentUser.setUser(mUser, true);
-        userRef.setValue(mUser).addOnSuccessListener(unused ->
-                Toast.makeText(getContext(), "Successfully changed your profile photo!", Toast.LENGTH_SHORT).show());
-        CurrentUser.setUser(mUser, true);
+        afterSuccessfulSubmittingChanges();
     }
 
     private void submitUserMail() {
@@ -179,10 +179,7 @@ public class EditProfileFragment extends Fragment {
         } else {
             userRef = getFirebaseDatabase().getReference(mUser.getLogin());
             mUser.setMail(mail);
-            CurrentUser.setUser(mUser, true);
-            userRef.setValue(mUser).addOnSuccessListener(unused ->
-                    Toast.makeText(getContext(), "Successfully changed your mail!", Toast.LENGTH_SHORT).show());
-            CurrentUser.setUser(mUser, true);
+            afterSuccessfulSubmittingChanges();
         }
     }
 
@@ -191,10 +188,7 @@ public class EditProfileFragment extends Fragment {
         if (currentUserBirthdayDate == birthdayDate) return;
         userRef = getFirebaseDatabase().getReference(mUser.getLogin());
         mUser.setBirthdayDate(birthdayDate);
-        CurrentUser.setUser(mUser, true);
-        userRef.setValue(mUser).addOnSuccessListener(unused ->
-                Toast.makeText(getContext(), "Successfully changed your birthday date!", Toast.LENGTH_SHORT).show());
-        CurrentUser.setUser(mUser, true);
+        afterSuccessfulSubmittingChanges();
     }
 
     private void editBirthdayDay() {
@@ -207,7 +201,13 @@ public class EditProfileFragment extends Fragment {
         datePickerFragment.setArguments(args);
 
         datePickerFragment.show(manager, "Choose birthday date:");
+    }
 
+    private void afterSuccessfulSubmittingChanges() {
+        CurrentUser.setUser(mUser, true);
+        userRef.setValue(mUser).addOnSuccessListener(unused ->
+                Toast.makeText(getContext(), "Successfully changed your data", Toast.LENGTH_SHORT).show());
+        mUserCredentialsHandler.updateUser(mUser);
     }
 
     @Override
