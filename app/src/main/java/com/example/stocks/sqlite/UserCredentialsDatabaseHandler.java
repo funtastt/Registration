@@ -48,7 +48,6 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    //Todo: Check correct code functioning
     public void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

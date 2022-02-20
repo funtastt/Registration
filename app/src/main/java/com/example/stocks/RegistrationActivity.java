@@ -102,8 +102,8 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void login(User user) {
-        CurrentUser.setUser(user, false);
         mUserCredentialsHandler.addUser(user);
+        currentUserLogin = user.getLogin();
 
         Intent loginIntent = new Intent(RegistrationActivity.this, MainPageActivity.class);
         startActivity(loginIntent);

@@ -1,6 +1,7 @@
 package com.example.stocks;
 
 import static com.example.stocks.Constants.convertStringToBitMap;
+import static com.example.stocks.Constants.currentUserLogin;
 import static com.example.stocks.Constants.getFirebaseDatabase;
 
 import android.content.Intent;
@@ -35,7 +36,7 @@ public class MainPageActivity extends AppCompatActivity {
     private ActivityMainPageBinding binding;
     User currentUser;
     NavigationView navigationView;
-    UserCredentialsDatabaseHandler mHandler = new UserCredentialsDatabaseHandler(this);
+    UserCredentialsDatabaseHandler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class MainPageActivity extends AppCompatActivity {
 
         binding = ActivityMainPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        mHandler = new UserCredentialsDatabaseHandler(this);
 
         setSupportActionBar(binding.drawerLayout.findViewById(R.id.toolbar));
         DrawerLayout drawer = binding.drawerLayout;
@@ -71,7 +74,8 @@ public class MainPageActivity extends AppCompatActivity {
         userProfileImage = headerView.findViewById(R.id.user_profile_image);
         userNameTextview = headerView.findViewById(R.id.user_name);
         logOutTextview = navigationView.findViewById(R.id.logout);
-        currentUser = CurrentUser.getUser();
+
+        currentUser = mHandler.getUser(currentUserLogin);
         userNameTextview.setText(currentUser.getName());
         logOutTextview.setOnClickListener(view -> logOut());
         setProfilePhoto();

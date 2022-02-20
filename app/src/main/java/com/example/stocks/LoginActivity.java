@@ -1,5 +1,7 @@
 package com.example.stocks;
 
+import static com.example.stocks.Constants.currentUserLogin;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -83,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void successfulLogin(User user) {
-        CurrentUser.setUser(user, false);
         mUserCredentialsHandler.addUser(user);
+        currentUserLogin = user.getLogin();
         Intent mainPageIntent = new Intent(LoginActivity.this, MainPageActivity.class);
         startActivity(mainPageIntent);
     }

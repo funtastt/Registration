@@ -6,6 +6,7 @@ import static com.example.stocks.Constants.CHOOSE_BIRTHDAY_DATE;
 import static com.example.stocks.Constants.INITIAL_BIRTHDAY_DATE;
 import static com.example.stocks.Constants.convertBitmapToString;
 import static com.example.stocks.Constants.convertStringToBitMap;
+import static com.example.stocks.Constants.currentUserLogin;
 import static com.example.stocks.Constants.getFirebaseDatabase;
 import static com.example.stocks.Constants.validateLoginString;
 import static com.example.stocks.Constants.validateMailString;
@@ -29,7 +30,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.stocks.CurrentUser;
 import com.example.stocks.R;
 import com.example.stocks.User;
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
@@ -48,12 +48,12 @@ public class EditProfileFragment extends Fragment {
     private ImageView mEditProfilePhoto;
     private String currentUserProfileImageBitmapString;
 
-    User mUser = CurrentUser.getUser();
-    DatabaseReference userRef;
+    private User currentUser;
+    private DatabaseReference userRef;
 
-    UserCredentialsDatabaseHandler mUserCredentialsHandler;
+    private UserCredentialsDatabaseHandler mUserCredentialsHandler;
 
-    private long birthdayDate = mUser.getBirthdayDate();
+    private long birthdayDate;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +83,8 @@ public class EditProfileFragment extends Fragment {
         mChangePassword.setOnClickListener(view -> changePassword());
 
         mUserCredentialsHandler = new UserCredentialsDatabaseHandler(getContext());
+        currentUser = mUserCredentialsHandler.getUser(currentUserLogin);
+        birthdayDate = currentUser.getBirthdayDate();
 
         initializeFields();
 
@@ -96,16 +98,16 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void initializeFields() {
-        mEditName.setText(mUser.getName());
-        mEditLogin.setText(mUser.getLogin());
-        mEditMail.setText(mUser.getMail());
-        mEditBirthday.setText(new SimpleDateFormat("dd.MM.yyyy").format(mUser.getBirthdayDate()));
+        mEditName.setText(currentUser.getName());
+        mEditLogin.setText(currentUser.getLogin());
+        mEditMail.setText(currentUser.getMail());
+        mEditBirthday.setText(new SimpleDateFormat("dd.MM.yyyy").format(currentUser.getBirthdayDate()));
         setProfilePhoto();
     }
 
     private void setProfilePhoto() {
-        String profileImageBitmapString = mUser.getProfilePhotoLink();
-        currentUserProfileImageBitmapString = mUser.getProfilePhotoLink();
+        String profileImageBitmapString = currentUser.getProfilePhotoLink();
+        currentUserProfileImageBitmapString = currentUser.getProfilePhotoLink();
         Bitmap profileImageBitmap = convertStringToBitMap(profileImageBitmapString);
         mEditProfilePhoto.setImageBitmap(profileImageBitmap);
     }
@@ -118,13 +120,13 @@ public class EditProfileFragment extends Fragment {
 
     private void submitUserName() {
         String name = mEditName.getText().toString().trim();
-        String currentUserName = mUser.getName();
+        String currentUserName = currentUser.getName();
         if (name.equals(currentUserName)) return;
         if (!validateNameString(name)) {
             Toast.makeText(getContext(), "Entered name is incorrect.", Toast.LENGTH_SHORT).show();
         } else {
-            userRef = getFirebaseDatabase().getReference(mUser.getLogin());
-            mUser.setName(name);
+            userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
+            currentUser.setName(name);
             afterSuccessfulSubmittingChanges();
         }
     }
@@ -140,13 +142,12 @@ public class EditProfileFragment extends Fragment {
             if (dataSnapshot.exists()) {
                 Toast.makeText(getContext(), "User with entered login is already exists", Toast.LENGTH_SHORT).show();
             } else {
-                userRef = getFirebaseDatabase().getReference(mUser.getLogin());
+                userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
                 userRef.removeValue();
-                mUser.setLogin(login);
-                CurrentUser.setUser(mUser, true);
-                changedLoginUserRef.setValue(mUser);
+                currentUser.setLogin(login);
+                changedLoginUserRef.setValue(currentUser);
                 Toast.makeText(getContext(), "Successfully changed your data!", Toast.LENGTH_SHORT).show();
-                mUserCredentialsHandler.updateUser(mUser);
+                mUserCredentialsHandler.updateUser(currentUser);
             }
         });
     }
@@ -165,29 +166,29 @@ public class EditProfileFragment extends Fragment {
         } else {
             currentUserProfileImageBitmapString = profileImageBitmapString;
         }
-        userRef = getFirebaseDatabase().getReference(mUser.getLogin());
-        mUser.setProfilePhotoLink(profileImageBitmapString);
+        userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
+        currentUser.setProfilePhotoLink(profileImageBitmapString);
         afterSuccessfulSubmittingChanges();
     }
 
     private void submitUserMail() {
         String mail = mEditMail.getText().toString().trim();
-        String currentUserMail = mUser.getMail();
+        String currentUserMail = currentUser.getMail();
         if (mail.equals(currentUserMail)) return;
         if (!validateMailString(mail)) {
             Toast.makeText(getContext(), "Entered mail is incorrect.", Toast.LENGTH_SHORT).show();
         } else {
-            userRef = getFirebaseDatabase().getReference(mUser.getLogin());
-            mUser.setMail(mail);
+            userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
+            currentUser.setMail(mail);
             afterSuccessfulSubmittingChanges();
         }
     }
 
     private void submitUserBirthday() {
-        long currentUserBirthdayDate = mUser.getBirthdayDate();
+        long currentUserBirthdayDate = currentUser.getBirthdayDate();
         if (currentUserBirthdayDate == birthdayDate) return;
-        userRef = getFirebaseDatabase().getReference(mUser.getLogin());
-        mUser.setBirthdayDate(birthdayDate);
+        userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
+        currentUser.setBirthdayDate(birthdayDate);
         afterSuccessfulSubmittingChanges();
     }
 
@@ -204,10 +205,9 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void afterSuccessfulSubmittingChanges() {
-        CurrentUser.setUser(mUser, true);
-        userRef.setValue(mUser).addOnSuccessListener(unused ->
+        userRef.setValue(currentUser).addOnSuccessListener(unused ->
                 Toast.makeText(getContext(), "Successfully changed your data", Toast.LENGTH_SHORT).show());
-        mUserCredentialsHandler.updateUser(mUser);
+        mUserCredentialsHandler.updateUser(currentUser);
     }
 
     @Override

@@ -25,6 +25,8 @@ public class Constants {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "user_data.db";
 
+    public static String currentUserLogin = "";
+
     public static boolean validateMailString(String emailStr) {
         Matcher matcher = Constants.MAIL_REGEX.matcher(emailStr);
         return matcher.find();

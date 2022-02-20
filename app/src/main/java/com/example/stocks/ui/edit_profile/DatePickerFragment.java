@@ -13,7 +13,6 @@ import android.widget.DatePicker;
 
 import androidx.fragment.app.DialogFragment;
 
-import com.example.stocks.CurrentUser;
 import com.example.stocks.R;
 
 import java.util.Calendar;
@@ -23,7 +22,7 @@ import java.util.GregorianCalendar;
 
 public class DatePickerFragment extends DialogFragment{
     DatePicker mDatePicker;
-    long birthdayDate = CurrentUser.getUser().getBirthdayDate();
+    long birthdayDate;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
