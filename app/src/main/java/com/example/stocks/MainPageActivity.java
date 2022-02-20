@@ -22,6 +22,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.stocks.databinding.ActivityMainPageBinding;
+import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +35,7 @@ public class MainPageActivity extends AppCompatActivity {
     private ActivityMainPageBinding binding;
     User currentUser;
     NavigationView navigationView;
+    UserCredentialsDatabaseHandler mHandler = new UserCredentialsDatabaseHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,13 @@ public class MainPageActivity extends AppCompatActivity {
     }
 
     private void logOut() {
+        mHandler.cleanTable();
         Intent intent = new Intent(MainPageActivity.this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

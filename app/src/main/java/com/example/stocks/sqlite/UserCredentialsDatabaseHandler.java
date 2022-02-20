@@ -42,6 +42,12 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    public void cleanTable() {
+        SQLiteDatabase sdb = this.getWritableDatabase();
+        sdb.execSQL("delete from " + TABLE_USER_CREDENTIALS);
+    }
+
+
     //Todo: Check correct code functioning
     public void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
