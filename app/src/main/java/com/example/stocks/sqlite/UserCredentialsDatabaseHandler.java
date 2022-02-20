@@ -70,7 +70,6 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         return new User(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), Long.parseLong(cursor.getString(4)), cursor.getString(5));
     }
 
-    // TODO: Implement updating user login logic
     public int updateUser(User user) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -81,12 +80,5 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_BIRTHDAY_DATE, user.getBirthdayDate());
         values.put(KEY_PROFILE_PHOTO, user.getProfilePhotoLink());
         return database.update(TABLE_USER_CREDENTIALS, values, PRIMARY_KEY_LOGIN + " = ?", new String[]{String.valueOf(user.getLogin())});
-    }
-
-    public void deleteUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_USER_CREDENTIALS, PRIMARY_KEY_LOGIN+ " = ?",
-                new String[] { String.valueOf(user.getLogin()) });
-        db.close();
     }
 }

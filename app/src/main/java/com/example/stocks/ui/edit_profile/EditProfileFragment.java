@@ -40,7 +40,6 @@ import java.text.SimpleDateFormat;
 
 
 public class EditProfileFragment extends Fragment {
-
     private View editProfileFragment;
     private EditText mEditName, mEditLogin, mEditMail, mEditBirthday;
     private TextView mChangePassword;
