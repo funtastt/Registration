@@ -53,9 +53,25 @@ public class Constants {
 
     public static String convertBitmapToString(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 70, baos);
         byte[] byteArray = baos.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        String bitmapString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+
+        if (bitmapString.length() >= 2000000) {
+            double ratio = bitmapString.length() / 2000000.0;
+            int newWidth = (int) (originalWidth / ratio);
+            int newHeight = (int) (originalHeight / ratio);
+
+            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+            ByteArrayOutputStream newBaos = new ByteArrayOutputStream();
+            newBitmap.compress(Bitmap.CompressFormat.PNG, 70, newBaos);
+            byte[] newByteArray = newBaos.toByteArray();
+            bitmapString = Base64.encodeToString(newByteArray, Base64.DEFAULT);
+        }
+
+        return bitmapString;
     }
 
     public static Bitmap convertStringToBitMap(String string) {
