@@ -2,28 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
-    android:gravity="bottom"
+    android:gravity="top"
     android:orientation="vertical"
-    android:paddingHorizontal="12dp"
-    android:paddingVertical="8dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/user_profile_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:contentDescription="@string/profile_image"
-        android:paddingTop="@dimen/nav_header_vertical_spacing" />
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/profile_image" />
 
     <TextView
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/helvetica_regular"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/nav_header_title"
-        android:fontFamily="@font/helvetica_regular"
-        android:textSize="18sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp" />
 </LinearLayout>
