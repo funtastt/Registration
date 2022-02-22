@@ -75,7 +75,7 @@ public class MainPageActivity extends AppCompatActivity {
         userNameTextview = headerView.findViewById(R.id.user_name);
         logOutTextview = navigationView.findViewById(R.id.logout);
 
-        currentUser = mHandler.getUser(currentUserLogin);
+        currentUser = mHandler.getUser();
         userNameTextview.setText(currentUser.getName());
         logOutTextview.setOnClickListener(view -> logOut());
         setProfilePhoto();

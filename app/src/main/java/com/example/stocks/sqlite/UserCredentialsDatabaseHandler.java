@@ -14,7 +14,8 @@ import com.example.stocks.User;
 
 public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_USER_CREDENTIALS = "user_credentials";
-    private static final String PRIMARY_KEY_LOGIN = "login";
+    private static final String PRIMARY_KEY_ID = "id";
+    private static final String KEY_LOGIN = "login";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_NAME = "name";
     private static final String KEY_MAIL = "mail";
@@ -28,7 +29,8 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_USER_CREDENTIALS + "(" +
-                PRIMARY_KEY_LOGIN + " TEXT PRIMARY KEY, " +
+                PRIMARY_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                KEY_LOGIN + " TEXT, " +
                 KEY_PASSWORD + " TEXT, " +
                 KEY_NAME + " TEXT, " +
                 KEY_MAIL + " TEXT, " +
@@ -51,7 +53,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     public void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(PRIMARY_KEY_LOGIN, user.getLogin());
+        values.put(KEY_LOGIN, user.getLogin());
         values.put(KEY_PASSWORD, user.getPassword());
         values.put(KEY_NAME, user.getName());
         values.put(KEY_MAIL, user.getMail());
@@ -61,10 +63,10 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public User getUser(String login) {
+    public User getUser() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[] { PRIMARY_KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO }, PRIMARY_KEY_LOGIN + "=?",
-                new String[] { String.valueOf(login) }, null, null, null, null);
+        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[] {KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO }, null,
+                null, null, null, null, String.valueOf(1));
         if (cursor != null)
             cursor.moveToFirst();
         return new User(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), Long.parseLong(cursor.getString(4)), cursor.getString(5));
@@ -73,12 +75,25 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     public int updateUser(User user) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(PRIMARY_KEY_LOGIN, user.getLogin());
+        values.put(KEY_LOGIN, user.getLogin());
         values.put(KEY_PASSWORD, user.getPassword());
         values.put(KEY_NAME, user.getName());
         values.put(KEY_MAIL, user.getMail());
         values.put(KEY_BIRTHDAY_DATE, user.getBirthdayDate());
         values.put(KEY_PROFILE_PHOTO, user.getProfilePhotoLink());
-        return database.update(TABLE_USER_CREDENTIALS, values, PRIMARY_KEY_LOGIN + " = ?", new String[]{String.valueOf(user.getLogin())});
+        return database.update(TABLE_USER_CREDENTIALS, values, KEY_LOGIN + " = ?", new String[]{String.valueOf(user.getLogin())});
+    }
+
+    public boolean checkIfUserLoggedIn() {
+        SQLiteDatabase database = this.getWritableDatabase();
+        String q = "Select * from " + TABLE_USER_CREDENTIALS;
+        Cursor cursor = database.rawQuery(q, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 }
+

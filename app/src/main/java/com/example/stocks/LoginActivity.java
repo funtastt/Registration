@@ -1,6 +1,7 @@
 package com.example.stocks;
 
 import static com.example.stocks.Constants.currentUserLogin;
+import static com.example.stocks.Constants.getFirebaseDatabase;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,7 +26,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
+
+        mUserCredentialsHandler = new UserCredentialsDatabaseHandler(this);
+        if (mUserCredentialsHandler.checkIfUserLoggedIn()) {
+            currentUserLogin = mUserCredentialsHandler.getUser().getLogin();
+            successfulLogin();
+        }
+
         mLogInTextView = findViewById(R.id.log_in_main_text);
         mLoginEditText = findViewById(R.id.login_login);
         mPasswordEditText = findViewById(R.id.password_login);
@@ -38,16 +44,10 @@ public class LoginActivity extends AppCompatActivity {
         
         mForgotPasswordTextView.setOnClickListener(view -> remindPassword());
 
-        mUserCredentialsHandler = new UserCredentialsDatabaseHandler(this);
-
         mBackToRegistrationPageTextView.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
             startActivity(intent);
         });
-    }
-
-    private FirebaseDatabase getFirebaseDatabase() {
-        return FirebaseDatabase.getInstance("https://stocks-95f7e-default-rtdb.europe-west1.firebasedatabase.app//");
     }
     
     private void login() {
@@ -71,7 +71,9 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 User user = dataSnapshot.getValue(User.class);
                 if (password.equals(user.getPassword())) {
-                    successfulLogin(user);
+                    mUserCredentialsHandler.addUser(user);
+                    currentUserLogin = user.getLogin();
+                    successfulLogin();
                 } else {
                     Toast.makeText(LoginActivity.this, "The password or the login is incorrect", Toast.LENGTH_SHORT).show();
                 }
@@ -84,9 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(remindPasswordIntent);
     }
 
-    private void successfulLogin(User user) {
-        mUserCredentialsHandler.addUser(user);
-        currentUserLogin = user.getLogin();
+    private void successfulLogin() {
         Intent mainPageIntent = new Intent(LoginActivity.this, MainPageActivity.class);
         startActivity(mainPageIntent);
     }

@@ -82,7 +82,7 @@ public class EditProfileFragment extends Fragment {
         mChangePassword.setOnClickListener(view -> changePassword());
 
         mUserCredentialsHandler = new UserCredentialsDatabaseHandler(getContext());
-        currentUser = mUserCredentialsHandler.getUser(currentUserLogin);
+        currentUser = mUserCredentialsHandler.getUser();
         birthdayDate = currentUser.getBirthdayDate();
 
         initializeFields();
@@ -130,6 +130,7 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
+    // Todo: Implement change login logic
     private void submitUserLogin() {
         String login = mEditLogin.getText().toString().trim();
         if (!validateLoginString(login)) {
@@ -143,10 +144,13 @@ public class EditProfileFragment extends Fragment {
             } else {
                 userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
                 userRef.removeValue();
+
+                currentUserLogin = login;
+
                 currentUser.setLogin(login);
-                changedLoginUserRef.setValue(currentUser);
-                Toast.makeText(getContext(), "Successfully changed your data!", Toast.LENGTH_SHORT).show();
                 mUserCredentialsHandler.updateUser(currentUser);
+                changedLoginUserRef.setValue(currentUser).addOnSuccessListener(unused ->
+                        Toast.makeText(getContext(), "Successfully changed your data", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -204,9 +208,10 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void afterSuccessfulSubmittingChanges() {
+        mUserCredentialsHandler.updateUser(currentUser);
         userRef.setValue(currentUser).addOnSuccessListener(unused ->
                 Toast.makeText(getContext(), "Successfully changed your data", Toast.LENGTH_SHORT).show());
-        mUserCredentialsHandler.updateUser(currentUser);
+        currentUser = mUserCredentialsHandler.getUser();
     }
 
     @Override

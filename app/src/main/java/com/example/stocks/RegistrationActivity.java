@@ -83,15 +83,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
         User user = new User(login, password, name, mail, birthdayDate, defaultProfileImageBitmapString);
 
-        FirebaseDatabase database = getFirebaseDatabase();
-        DatabaseReference userRef = database.getReference(login);
+        DatabaseReference userRef = getFirebaseDatabase().getReference(login);
 
         userRef.get().addOnSuccessListener(dataSnapshot -> {
             if (dataSnapshot.exists()) {
                 Toast.makeText(RegistrationActivity.this, "User with this login is already registered", Toast.LENGTH_SHORT).show();
             } else {
                 userRef.setValue(user);
-                login(user);
+                mUserCredentialsHandler.addUser(user);
+                currentUserLogin = user.getLogin();
+                login();
             }
         });
     }
@@ -101,10 +102,7 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(goToLoginPageIntent);
     }
 
-    private void login(User user) {
-        mUserCredentialsHandler.addUser(user);
-        currentUserLogin = user.getLogin();
-
+    private void login() {
         Intent loginIntent = new Intent(RegistrationActivity.this, MainPageActivity.class);
         startActivity(loginIntent);
     }
