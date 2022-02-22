@@ -130,7 +130,6 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    // Todo: Implement change login logic
     private void submitUserLogin() {
         String login = mEditLogin.getText().toString().trim();
         if (!validateLoginString(login)) {

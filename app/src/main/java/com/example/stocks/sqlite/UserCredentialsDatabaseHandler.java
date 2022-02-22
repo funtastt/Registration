@@ -65,11 +65,13 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
 
     public User getUser() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[] {KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO }, null,
+        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[] {KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO, PRIMARY_KEY_ID }, null,
                 null, null, null, null, String.valueOf(1));
         if (cursor != null)
             cursor.moveToFirst();
-        return new User(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), Long.parseLong(cursor.getString(4)), cursor.getString(5));
+        User user = new User(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), Long.parseLong(cursor.getString(4)), cursor.getString(5));
+        user.setUserId(Integer.parseInt(cursor.getString(6)));
+        return user;
     }
 
     public int updateUser(User user) {
@@ -81,7 +83,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_MAIL, user.getMail());
         values.put(KEY_BIRTHDAY_DATE, user.getBirthdayDate());
         values.put(KEY_PROFILE_PHOTO, user.getProfilePhotoLink());
-        return database.update(TABLE_USER_CREDENTIALS, values, KEY_LOGIN + " = ?", new String[]{String.valueOf(user.getLogin())});
+        return database.update(TABLE_USER_CREDENTIALS, values, PRIMARY_KEY_ID + " = ?", new String[]{String.valueOf(user.getUserId())});
     }
 
     public boolean checkIfUserLoggedIn() {

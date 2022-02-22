@@ -4,6 +4,7 @@ public class User {
     private String login, password, name, mail, profilePhotoLink;
     private double balance = 0.0;
     private long birthdayDate;
+    private int userId;
 
     public User() {
     }
@@ -71,5 +72,13 @@ public class User {
 
     public void setBirthdayDate(long birthdayDate) {
         this.birthdayDate = birthdayDate;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
