@@ -48,7 +48,7 @@ public class Constants {
     }
 
     public static FirebaseDatabase getFirebaseDatabase() {
-        return FirebaseDatabase.getInstance("https://stocks-95f7e-default-rtdb.europe-west1.firebasedatabase.app//");
+        return FirebaseDatabase.getInstance("https://stocks-95f7e-default-rtdb.europe-west1.firebasedatabase.app/");
     }
 
     public static String convertBitmapToString(Bitmap bitmap) {

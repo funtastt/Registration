@@ -45,4 +45,6 @@
     <string name="change_password"><u>Change password</u></string>
     <string name="mail">Mail</string>
     <string name="back_to_registration_page"><u>Go to registration page</u></string>
+    <string name="obligation_name">Obligation name</string>
+    <string name="maturity_date_of_the_bond">Maturity date of the bond</string>
 </resources>

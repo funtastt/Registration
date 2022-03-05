@@ -5,14 +5,17 @@ import static com.example.stocks.Constants.getFirebaseDatabase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.database.DatabaseReference;
 
 public class LoginActivity extends AppCompatActivity {
@@ -65,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+
         userRef.get().addOnSuccessListener(dataSnapshot -> {
             if (!dataSnapshot.exists()) {
                 Toast.makeText(LoginActivity.this, "User with this login doesn't exists...", Toast.LENGTH_SHORT).show();
@@ -77,6 +81,13 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, "The password or the login is incorrect", Toast.LENGTH_SHORT).show();
                 }
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Error", "e", e);
+                Toast.makeText(LoginActivity.this, "ahhaha", Toast.LENGTH_SHORT).show();
             }
         });
     }
