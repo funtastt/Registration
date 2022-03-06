@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.stocks.R;
-import com.example.stocks.databinding.FragmentMarketBinding;
 import com.example.stocks.ui.market.adapters.BondAdapter;
 import com.example.stocks.ui.market.securities.Bond;
 import com.example.stocks.ui.market.securities.Currency;
@@ -29,6 +28,12 @@ public class MarketFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         editProfileFragment = inflater.inflate(R.layout.fragment_market, container, false);
 
+        TextView userBalance = editProfileFragment.findViewById(R.id.market_page_user_balance);
+        TextView currentDate = editProfileFragment.findViewById(R.id.market_page_date);
+
+        userBalance.setText("loh");
+        currentDate.setText("loh");
+
         ListView marketListview = editProfileFragment.findViewById(R.id.securitiesListView);
 
         Bond governmentBond = new Bond("Government Bond", Currency.RUB, 1, 1000.0, 60.0, 52.0, 0.9999);
@@ -37,7 +42,6 @@ public class MarketFragment extends Fragment {
         Bond smallCompanyBond = new Bond("Small Company Bond", Currency.RUB, 4, 60000.0, 9000.0, 12.0, 0.997);
 
         final Bond[] bonds = new Bond[] {governmentBond, largeCompanyBond, municipalBond, smallCompanyBond};
-        final String[] strings = new String[] {"1", "2"};
         BondAdapter adapter = new BondAdapter(getContext(), R.layout.list_bond_layout, R.id.list_item_bond_name, Arrays.asList(bonds));
 
         marketListview.setAdapter(adapter);

@@ -46,5 +46,10 @@
     <string name="mail">Mail</string>
     <string name="back_to_registration_page"><u>Go to registration page</u></string>
     <string name="obligation_name">Obligation name</string>
-    <string name="maturity_date_of_the_bond">Maturity date of the bond</string>
+    <string name="maturity_date_of_the_bond">Maturity of the bond</string>
+    <string name="your_balance">Your balance:</string>
+    <string name="current_date">Current date:</string>
+    <string name="dollar_symbol">$</string>
+    <string name="price">price</string>
+    <string name="coupon">Coupon</string>
 </resources>

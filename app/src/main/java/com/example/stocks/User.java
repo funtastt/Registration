@@ -2,7 +2,7 @@ package com.example.stocks;
 
 public class User {
     private String login, password, name, mail, profilePhotoLink;
-    private double balance = 0.0;
+    private double balance = 1000.0;
     private long birthdayDate;
     private int userId;
 

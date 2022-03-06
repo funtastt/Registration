@@ -23,7 +23,7 @@
         android:layout_below="@+id/list_item_bond_name"
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:text="@string/maturity_date_of_the_bond"
         android:textColor="#999"
         android:textSize="16sp" />
@@ -33,22 +33,68 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:text="price"
+        android:layout_marginEnd="3dp"
+        android:layout_toStartOf="@+id/list_item_bond_price_currency"
+        android:text="@string/price"
         android:textColor="#000"
         android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/list_item_bond_price_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="3dp"
+        android:layout_toStartOf="@+id/slash"
+        android:text="@string/dollar_symbol"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/slash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="3dp"
+        android:layout_toStartOf="@+id/list_item_bond_coupon"
+        android:text="/"
+        android:textColor="#999"
+        android:textSize="16sp" />
+    <TextView
         android:id="@+id/list_item_bond_coupon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/list_item_bond_price"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="3dp"
+        android:layout_toStartOf="@+id/list_item_bond_coupon_currency"
+        android:text="@string/coupon"
+        android:textColor="#33FF33"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/list_item_bond_coupon_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:text="@string/dollar_symbol"
+        android:textColor="#33FF33"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/buy_bond_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/slash"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="0dp"
-        android:text="Coupon"
-        android:textColor="#33FF33"
-        android:textSize="16sp" />
+        android:padding="0dp"
+        android:text="Buy" />
 </RelativeLayout>

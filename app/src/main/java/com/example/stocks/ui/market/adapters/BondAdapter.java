@@ -37,13 +37,17 @@ public class BondAdapter extends ArrayAdapter<Bond> {
         TextView bondName = convertView.findViewById(R.id.list_item_bond_name);
         TextView bondDate = convertView.findViewById(R.id.list_item_bond_date);
         TextView bondPrice = convertView.findViewById(R.id.list_item_bond_price);
+        TextView bondPriceCurrency = convertView.findViewById(R.id.list_item_bond_price_currency);
         TextView bondCoupon = convertView.findViewById(R.id.list_item_bond_coupon);
+        TextView bondCouponCurrency = convertView.findViewById(R.id.list_item_bond_coupon_currency);
 
         bondName.setText(bond.getName());
         // Todo: implement logic
-        bondDate.setText(String.valueOf(bond.getPaymentPeriod()));
+        bondDate.setText("Maturity of the bond: " + bond.getPaymentPeriod());
         bondPrice.setText(String.valueOf(bond.getCurrentPrice()));
+        bondPriceCurrency.setText(bond.getCurrency().getCurrencySymbol());
         bondCoupon.setText(String.valueOf(bond.getCouponPrice()));
+        bondCouponCurrency.setText(bond.getCurrency().getCurrencySymbol());
         return super.getView(position, convertView, parent);
     }
 }
