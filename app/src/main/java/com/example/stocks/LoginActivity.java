@@ -108,12 +108,4 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
 
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        User currentUser = mUserCredentialsHandler.getUser();
-        currentUser.setLastLoginDate(new Date().getTime());
-        mUserCredentialsHandler.updateUser(currentUser);
-    }
 }

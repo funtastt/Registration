@@ -8,6 +8,7 @@ import static com.example.stocks.Constants.convertBitmapToString;
 import static com.example.stocks.Constants.convertStringToBitMap;
 import static com.example.stocks.Constants.currentUserLogin;
 import static com.example.stocks.Constants.getFirebaseDatabase;
+import static com.example.stocks.Constants.updateFirebaseUser;
 import static com.example.stocks.Constants.validateLoginString;
 import static com.example.stocks.Constants.validateMailString;
 import static com.example.stocks.Constants.validateNameString;
@@ -50,7 +51,7 @@ public class EditProfileFragment extends Fragment {
     private User currentUser;
     private DatabaseReference userRef;
 
-    private UserCredentialsDatabaseHandler mUserCredentialsHandler;
+    private UserCredentialsDatabaseHandler mHandler;
 
     private long birthdayDate;
 
@@ -81,8 +82,8 @@ public class EditProfileFragment extends Fragment {
         mEditBirthday.setOnClickListener(view -> editBirthdayDay());
         mChangePassword.setOnClickListener(view -> changePassword());
 
-        mUserCredentialsHandler = new UserCredentialsDatabaseHandler(getContext());
-        currentUser = mUserCredentialsHandler.getUser();
+        mHandler = new UserCredentialsDatabaseHandler(getContext());
+        currentUser = mHandler.getUser();
         birthdayDate = currentUser.getBirthdayDate();
 
         initializeFields();
@@ -147,7 +148,7 @@ public class EditProfileFragment extends Fragment {
                 currentUserLogin = login;
 
                 currentUser.setLogin(login);
-                mUserCredentialsHandler.updateUser(currentUser);
+                mHandler.updateUser(currentUser);
                 changedLoginUserRef.setValue(currentUser).addOnSuccessListener(unused ->
                         Toast.makeText(getContext(), "Successfully changed your data", Toast.LENGTH_SHORT).show());
             }
@@ -207,10 +208,16 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void afterSuccessfulSubmittingChanges() {
-        mUserCredentialsHandler.updateUser(currentUser);
+        mHandler.updateUser(currentUser);
         userRef.setValue(currentUser).addOnSuccessListener(unused ->
                 Toast.makeText(getContext(), "Successfully changed your data", Toast.LENGTH_SHORT).show());
-        currentUser = mUserCredentialsHandler.getUser();
+        currentUser = mHandler.getUser();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        updateFirebaseUser(mHandler);
     }
 
     @Override

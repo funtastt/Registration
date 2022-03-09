@@ -1,14 +1,18 @@
 package com.example.stocks;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,5 +86,14 @@ public class Constants {
             e.getMessage();
             return null;
         }
+    }
+
+    public static void updateFirebaseUser(UserCredentialsDatabaseHandler mHandler) {
+        User currentUser = mHandler.getUser();
+        currentUser.setLastLoginDate(new Date().getTime());
+        mHandler.updateUser(currentUser);
+
+        DatabaseReference userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
+        userRef.setValue(currentUser);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.stocks.ui.market;
 
+import static com.example.stocks.Constants.updateFirebaseUser;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.stocks.R;
+import com.example.stocks.User;
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.example.stocks.ui.market.adapters.BondAdapter;
 import com.example.stocks.ui.market.securities.Bond;
@@ -20,6 +23,7 @@ import com.example.stocks.ui.market.securities.Currency;
 
 import java.sql.Array;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 public class MarketFragment extends Fragment {
@@ -68,5 +72,11 @@ public class MarketFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         editProfileFragment = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        updateFirebaseUser(mHandler);
     }
 }

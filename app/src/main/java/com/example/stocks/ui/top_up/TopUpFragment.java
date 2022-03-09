@@ -10,11 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.stocks.User;
 import com.example.stocks.databinding.FragmentTopUpBinding;
+import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
+
+import java.util.Date;
 
 public class TopUpFragment extends Fragment {
 
     private FragmentTopUpBinding binding;
+    private UserCredentialsDatabaseHandler mHandler;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -26,6 +31,8 @@ public class TopUpFragment extends Fragment {
 
         final TextView textView = binding.textTopUp;
         topUpViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        mHandler = new UserCredentialsDatabaseHandler(getContext());
         return root;
     }
 
@@ -35,5 +42,11 @@ public class TopUpFragment extends Fragment {
         binding = null;
     }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        User currentUser = mHandler.getUser();
+        currentUser.setLastLoginDate(new Date().getTime());
+        mHandler.updateUser(currentUser);
+    }
 }
