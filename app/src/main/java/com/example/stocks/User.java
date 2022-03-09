@@ -2,11 +2,12 @@ package com.example.stocks;
 
 import com.example.stocks.ui.market.securities.Currency;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.HashMap;
 
 public class User {
 
-    // TODO: (!!!!!!!!!!) Implement balance logic (add balances and implement saving balance to SQLite)
     private String login, password, name, mail, profilePhotoLink;
     private HashMap<String, Double> balances = new HashMap<String, Double>() {
         {
@@ -18,7 +19,7 @@ public class User {
             put(Currency.CHF.getCurrencyCode(), 0.0);
         }
     };
-    private long birthdayDate;
+    private long birthdayDate, lastLoginDate;
     private int userId;
 
     public User() {
@@ -31,6 +32,17 @@ public class User {
         this.profilePhotoLink = profilePhotoLink;
         this.mail = mail;
         this.birthdayDate = birthdayDate;
+        this.lastLoginDate = new Date().getTime();
+    }
+
+    public User(String login, String password, String name, String mail, long birthdayDate, String profilePhotoLink, long lastLoginDate) {
+        this.login = login;
+        this.password = password;
+        this.name = name;
+        this.profilePhotoLink = profilePhotoLink;
+        this.mail = mail;
+        this.birthdayDate = birthdayDate;
+        this.lastLoginDate = lastLoginDate;
     }
 
     public String getLogin() {
@@ -95,5 +107,13 @@ public class User {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public long getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(long lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 }

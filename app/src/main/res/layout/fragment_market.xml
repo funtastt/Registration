@@ -36,10 +36,10 @@
         android:id="@+id/market_page_date_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/market_page_user_balance_text"
+        android:layout_below="@+id/market_page_user_balance"
         android:layout_alignParentStart="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="12dp"
         android:text="@string/current_date"
         android:textColor="#000"
         android:textSize="16sp" />
@@ -48,9 +48,9 @@
         android:id="@+id/market_page_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/market_page_user_balance_text"
+        android:layout_below="@+id/market_page_user_balance"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="12dp"
         android:layout_toEndOf="@+id/market_page_date_text"
         android:text="date"
         android:textColor="#000"
@@ -74,6 +74,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/market_page_bonds_textView"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="44dp"
         tools:listitem="@layout/list_bond_layout" />
 </RelativeLayout>

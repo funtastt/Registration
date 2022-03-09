@@ -31,6 +31,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BIRTHDAY_DATE = "birthday_date";
     private static final String KEY_PROFILE_PHOTO = "profile_photo";
     private static final String KEY_BALANCES = "balances";
+    private static final String KEY_LAST_LOGIN_DATE = "last_login_date";
 
     public UserCredentialsDatabaseHandler(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,6 +47,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
                 KEY_MAIL + " TEXT, " +
                 KEY_BIRTHDAY_DATE + " LONG, " +
                 KEY_BALANCES + " TEXT, " +
+                KEY_LAST_LOGIN_DATE + " LONG, " +
                 KEY_PROFILE_PHOTO + " TEXT)");
     }
 
@@ -70,6 +72,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_MAIL, user.getMail());
         values.put(KEY_BIRTHDAY_DATE, user.getBirthdayDate());
         values.put(KEY_BALANCES, mapToString(user.getBalances()));
+        values.put(KEY_LAST_LOGIN_DATE, user.getLastLoginDate());
         values.put(KEY_PROFILE_PHOTO, user.getProfilePhotoLink());
         db.insert(TABLE_USER_CREDENTIALS, null, values);
         db.close();
@@ -81,29 +84,27 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
 
     public User getUser() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[] {KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO, PRIMARY_KEY_ID, KEY_BALANCES }, null,
+        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[]{KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO, PRIMARY_KEY_ID, KEY_BALANCES, KEY_LAST_LOGIN_DATE}, null,
                 null, null, null, null, String.valueOf(1));
         if (cursor != null)
             cursor.moveToFirst();
         User user = new User(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), Long.parseLong(cursor.getString(4)), cursor.getString(5));
         user.setUserId(Integer.parseInt(cursor.getString(6)));
         String balancesString = cursor.getString(7);
+        user.setLastLoginDate(Long.parseLong(cursor.getString(8)));
         try {
             JSONObject object = new JSONObject(balancesString);
             Iterator<String> nameItr = object.keys();
-            Map<String, Double> outMap = new HashMap<>();
-            while(nameItr.hasNext()) {
+            HashMap<String, Double> balances = new HashMap<>();
+            while (nameItr.hasNext()) {
                 String name = nameItr.next();
-                outMap.put(name, object.getDouble(name));
+                balances.put(name, object.getDouble(name));
             }
-
-            for (Map.Entry<String, Double> map : outMap.entrySet()) {
-                Log.d("Error", map.getKey() + ", " + map.getValue());
-            }
-
-            } catch (JSONException e) {
+            user.setBalances(balances);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return user;
     }
 
@@ -116,6 +117,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_MAIL, user.getMail());
         values.put(KEY_BIRTHDAY_DATE, user.getBirthdayDate());
         values.put(KEY_BALANCES, mapToString(user.getBalances()));
+        values.put(KEY_LAST_LOGIN_DATE, user.getLastLoginDate());
         values.put(KEY_PROFILE_PHOTO, user.getProfilePhotoLink());
         return database.update(TABLE_USER_CREDENTIALS, values, PRIMARY_KEY_ID + " = ?", new String[]{String.valueOf(user.getUserId())});
     }
@@ -124,7 +126,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         String q = "Select * from " + TABLE_USER_CREDENTIALS;
         Cursor cursor = database.rawQuery(q, null);
-        if(cursor.getCount() <= 0){
+        if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
         }

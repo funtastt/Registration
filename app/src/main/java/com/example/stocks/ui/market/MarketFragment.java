@@ -13,16 +13,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.stocks.R;
+import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.example.stocks.ui.market.adapters.BondAdapter;
 import com.example.stocks.ui.market.securities.Bond;
 import com.example.stocks.ui.market.securities.Currency;
 
 import java.sql.Array;
 import java.util.Arrays;
+import java.util.Map;
 
 public class MarketFragment extends Fragment {
 
     private View editProfileFragment;
+    private UserCredentialsDatabaseHandler mHandler;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +34,19 @@ public class MarketFragment extends Fragment {
         TextView userBalance = editProfileFragment.findViewById(R.id.market_page_user_balance);
         TextView currentDate = editProfileFragment.findViewById(R.id.market_page_date);
 
-        userBalance.setText("loh");
+        StringBuilder balancesString = new StringBuilder();
+
+        mHandler = new UserCredentialsDatabaseHandler(getContext());
+
+        int counter = 0;
+        for (Map.Entry<String, Double> entry : mHandler.getUser().getBalances().entrySet()) {
+            counter++;
+            balancesString.append(entry.getValue()).append(" ").append(entry.getKey()).append(" / ");
+            if (counter == 3) balancesString.append("\n");
+        }
+        balancesString = new StringBuilder(balancesString.substring(0, balancesString.length() - 2));
+
+        userBalance.setText(balancesString.toString());
         currentDate.setText("loh");
 
         ListView marketListview = editProfileFragment.findViewById(R.id.securitiesListView);
