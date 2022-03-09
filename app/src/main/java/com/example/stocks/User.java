@@ -35,16 +35,6 @@ public class User {
         this.lastLoginDate = new Date().getTime();
     }
 
-    public User(String login, String password, String name, String mail, long birthdayDate, String profilePhotoLink, long lastLoginDate) {
-        this.login = login;
-        this.password = password;
-        this.name = name;
-        this.profilePhotoLink = profilePhotoLink;
-        this.mail = mail;
-        this.birthdayDate = birthdayDate;
-        this.lastLoginDate = lastLoginDate;
-    }
-
     public String getLogin() {
         return login;
     }

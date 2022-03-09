@@ -28,6 +28,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.Date;
+
 public class MainPageActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -98,5 +100,13 @@ public class MainPageActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        User currentUser = mHandler.getUser();
+        currentUser.setLastLoginDate(new Date().getTime());
+        mHandler.updateUser(currentUser);
     }
 }

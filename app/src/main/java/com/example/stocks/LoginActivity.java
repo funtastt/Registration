@@ -18,6 +18,8 @@ import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.Date;
+
 public class LoginActivity extends AppCompatActivity {
 
     TextView mLogInTextView, mForgotPasswordTextView, mBackToRegistrationPageTextView;
@@ -105,5 +107,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        User currentUser = mUserCredentialsHandler.getUser();
+        currentUser.setLastLoginDate(new Date().getTime());
+        mUserCredentialsHandler.updateUser(currentUser);
     }
 }
