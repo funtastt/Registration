@@ -31,6 +31,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BIRTHDAY_DATE = "birthday_date";
     private static final String KEY_PROFILE_PHOTO = "profile_photo";
     private static final String KEY_BALANCES = "balances";
+    private static final String KEY_INCOME_PER_SECONDS = "income_per_second";
     private static final String KEY_LAST_LOGIN_DATE = "last_login_date";
 
     public UserCredentialsDatabaseHandler(@Nullable Context context) {
@@ -47,6 +48,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
                 KEY_MAIL + " TEXT, " +
                 KEY_BIRTHDAY_DATE + " LONG, " +
                 KEY_BALANCES + " TEXT, " +
+                KEY_INCOME_PER_SECONDS + " TEXT, " +
                 KEY_LAST_LOGIN_DATE + " LONG, " +
                 KEY_PROFILE_PHOTO + " TEXT)");
     }
@@ -72,6 +74,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_MAIL, user.getMail());
         values.put(KEY_BIRTHDAY_DATE, user.getBirthdayDate());
         values.put(KEY_BALANCES, mapToString(user.getBalances()));
+        values.put(KEY_INCOME_PER_SECONDS, mapToString(user.getIncomePerSecond()));
         values.put(KEY_LAST_LOGIN_DATE, user.getLastLoginDate());
         values.put(KEY_PROFILE_PHOTO, user.getProfilePhotoLink());
         db.insert(TABLE_USER_CREDENTIALS, null, values);
@@ -84,7 +87,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
 
     public User getUser() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[]{KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO, PRIMARY_KEY_ID, KEY_BALANCES, KEY_LAST_LOGIN_DATE}, null,
+        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[]{KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO, PRIMARY_KEY_ID, KEY_BALANCES, KEY_LAST_LOGIN_DATE, KEY_LAST_LOGIN_DATE}, null,
                 null, null, null, null, String.valueOf(1));
         if (cursor != null)
             cursor.moveToFirst();
@@ -92,15 +95,25 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         user.setUserId(Integer.parseInt(cursor.getString(6)));
         String balancesString = cursor.getString(7);
         user.setLastLoginDate(Long.parseLong(cursor.getString(8)));
+        String incomePerSecondString = cursor.getString(9);
         try {
-            JSONObject object = new JSONObject(balancesString);
-            Iterator<String> nameItr = object.keys();
+            JSONObject balancesJSON = new JSONObject(balancesString);
+            Iterator<String> nameItr = balancesJSON.keys();
             HashMap<String, Double> balances = new HashMap<>();
             while (nameItr.hasNext()) {
                 String name = nameItr.next();
-                balances.put(name, object.getDouble(name));
+                balances.put(name, balancesJSON.getDouble(name));
             }
             user.setBalances(balances);
+
+            JSONObject incomesJSON = new JSONObject(incomePerSecondString);
+            Iterator<String> iterator = incomesJSON.keys();
+            HashMap<String, Double> incomes = new HashMap<>();
+            while (iterator.hasNext()) {
+                String name = iterator.next();
+                incomes.put(name, incomesJSON.getDouble(name));
+            }
+            user.setIncomePerSecond(incomes);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,7 @@ import static com.example.stocks.Constants.convertBitmapToString;
 import static com.example.stocks.Constants.convertStringToBitMap;
 import static com.example.stocks.Constants.currentUserLogin;
 import static com.example.stocks.Constants.getFirebaseDatabase;
-import static com.example.stocks.Constants.updateFirebaseUser;
+import static com.example.stocks.Constants.updateInfo;
 import static com.example.stocks.Constants.validateLoginString;
 import static com.example.stocks.Constants.validateMailString;
 import static com.example.stocks.Constants.validateNameString;
@@ -215,9 +215,9 @@ public class EditProfileFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        updateFirebaseUser(mHandler);
+    public void onStart() {
+        super.onStart();
+        updateInfo(mHandler);
     }
 
     @Override

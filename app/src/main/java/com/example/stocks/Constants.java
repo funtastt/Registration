@@ -1,18 +1,18 @@
 package com.example.stocks;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
+import com.example.stocks.ui.market.securities.Currency;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,12 +88,37 @@ public class Constants {
         }
     }
 
-    public static void updateFirebaseUser(UserCredentialsDatabaseHandler mHandler) {
+    public static void updateInfo(UserCredentialsDatabaseHandler mHandler) {
         User currentUser = mHandler.getUser();
-        currentUser.setLastLoginDate(new Date().getTime());
-        mHandler.updateUser(currentUser);
 
+        long lastLoginDate = currentUser.getLastLoginDate();
+        long currentTime = new Date().getTime();
+        long difference = currentTime - lastLoginDate;
+
+        currentUser.setLastLoginDate(currentTime);
+        currentUser = updateUserBalance(difference, currentUser);
+
+        mHandler.updateUser(currentUser);
         DatabaseReference userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
         userRef.setValue(currentUser);
+
+    }
+
+    private static User updateUserBalance(long difference, User currentUser) {
+        double diffTimeInSeconds = difference / 1000.0;
+        HashMap<String, Double> balances = currentUser.getBalances();
+        HashMap<String, Double> incomes = currentUser.getIncomePerSecond();
+
+        for (Currency currency : Currency.values()) {
+            String currencyCode = currency.getCurrencyCode();
+            double balance = balances.get(currencyCode);
+            balance += incomes.get(currencyCode) * diffTimeInSeconds;
+
+            balances.put(currencyCode, Math.round(balance * 10) / 10.0);
+        }
+
+        currentUser.setBalances(balances);
+
+        return currentUser;
     }
 }

@@ -43,8 +43,8 @@ public class TopUpFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onStart() {
+        super.onStart();
         User currentUser = mHandler.getUser();
         currentUser.setLastLoginDate(new Date().getTime());
         mHandler.updateUser(currentUser);

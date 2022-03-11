@@ -19,6 +19,18 @@ public class User {
             put(Currency.CHF.getCurrencyCode(), 0.0);
         }
     };
+
+    private HashMap<String, Double> incomePerSecond = new HashMap<String, Double>() {
+        {
+            put(Currency.RUB.getCurrencyCode(), 100.0);
+            put(Currency.USD.getCurrencyCode(), 0.0);
+            put(Currency.EUR.getCurrencyCode(), 0.0);
+            put(Currency.GBP.getCurrencyCode(), 0.0);
+            put(Currency.JPY.getCurrencyCode(), 0.0);
+            put(Currency.CHF.getCurrencyCode(), 0.0);
+        }
+    };
+
     private long birthdayDate, lastLoginDate;
     private int userId;
 
@@ -105,5 +117,13 @@ public class User {
 
     public void setLastLoginDate(long lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public HashMap<String, Double> getIncomePerSecond() {
+        return incomePerSecond;
+    }
+
+    public void setIncomePerSecond(HashMap<String, Double> incomePerSecond) {
+        this.incomePerSecond = incomePerSecond;
     }
 }

@@ -103,8 +103,8 @@ public class MainPageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onStart() {
+        super.onStart();
         User currentUser = mHandler.getUser();
         currentUser.setLastLoginDate(new Date().getTime());
         mHandler.updateUser(currentUser);
