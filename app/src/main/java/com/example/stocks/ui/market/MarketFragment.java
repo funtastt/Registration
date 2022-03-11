@@ -1,6 +1,6 @@
 package com.example.stocks.ui.market;
 
-import static com.example.stocks.Constants.updateInfo;
+import static com.example.stocks.StaticMethods.updateInfo;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

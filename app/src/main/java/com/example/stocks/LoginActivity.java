@@ -1,11 +1,10 @@
 package com.example.stocks;
 
 import static com.example.stocks.Constants.currentUserLogin;
-import static com.example.stocks.Constants.getFirebaseDatabase;
+import static com.example.stocks.StaticMethods.getFirebaseDatabase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,10 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.database.DatabaseReference;
 
-import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -73,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
         userRef.get().addOnSuccessListener(dataSnapshot -> {
             if (!dataSnapshot.exists()) {
-                Toast.makeText(LoginActivity.this, "User with this login doesn't exists...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "User with this login doesn't exist...", Toast.LENGTH_SHORT).show();
             } else {
                 User user = dataSnapshot.getValue(User.class);
                 if (password.equals(user.getPassword())) {
@@ -83,13 +80,6 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, "The password or the login is incorrect", Toast.LENGTH_SHORT).show();
                 }
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("Error", "e", e);
-                Toast.makeText(LoginActivity.this, "ahhaha", Toast.LENGTH_SHORT).show();
             }
         });
     }

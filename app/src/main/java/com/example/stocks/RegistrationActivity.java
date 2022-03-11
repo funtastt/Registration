@@ -1,6 +1,12 @@
 package com.example.stocks;
 
 import static com.example.stocks.Constants.*;
+import static com.example.stocks.StaticMethods.convertBitmapToString;
+import static com.example.stocks.StaticMethods.getFirebaseDatabase;
+import static com.example.stocks.StaticMethods.validateLoginString;
+import static com.example.stocks.StaticMethods.validateMailString;
+import static com.example.stocks.StaticMethods.validateNameString;
+import static com.example.stocks.StaticMethods.validatePasswordString;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

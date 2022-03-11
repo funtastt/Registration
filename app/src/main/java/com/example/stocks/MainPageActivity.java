@@ -1,20 +1,14 @@
 package com.example.stocks;
 
-import static com.example.stocks.Constants.convertStringToBitMap;
-import static com.example.stocks.Constants.currentUserLogin;
-import static com.example.stocks.Constants.getFirebaseDatabase;
+import static com.example.stocks.StaticMethods.convertStringToBitMap;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -24,9 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.stocks.databinding.ActivityMainPageBinding;
 import com.example.stocks.sqlite.UserCredentialsDatabaseHandler;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.Date;
 
