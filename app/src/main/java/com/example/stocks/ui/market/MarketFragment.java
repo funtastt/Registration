@@ -29,7 +29,6 @@ public class MarketFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         editProfileFragment = inflater.inflate(R.layout.fragment_market, container, false);
-
         TextView userBalance = editProfileFragment.findViewById(R.id.market_page_user_balance);
         TextView currentDate = editProfileFragment.findViewById(R.id.market_page_date);
 
@@ -41,7 +40,7 @@ public class MarketFragment extends Fragment {
         for (Map.Entry<String, Double> entry : mHandler.getUser().getBalances().entrySet()) {
             counter++;
             balancesString.append(entry.getValue()).append(" ").append(entry.getKey()).append(" / ");
-            if (counter == 3) balancesString.append("\n");
+            if (counter % 2 == 0) balancesString.append("\n");
         }
         balancesString = new StringBuilder(balancesString.substring(0, balancesString.length() - 2));
 

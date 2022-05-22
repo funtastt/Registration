@@ -1,5 +1,6 @@
 package com.example.stocks.ui.market.securities;
 
+// Security - (англ.) ценная бумага
 public class Security {
     String name;
     Currency currency;

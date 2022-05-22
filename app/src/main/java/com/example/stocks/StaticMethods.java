@@ -85,7 +85,6 @@ public class StaticMethods {
         mHandler.updateUser(currentUser);
         DatabaseReference userRef = getFirebaseDatabase().getReference(currentUser.getLogin());
         userRef.setValue(currentUser);
-
     }
 
     private static User updateUserBalance(long difference, User currentUser) {
