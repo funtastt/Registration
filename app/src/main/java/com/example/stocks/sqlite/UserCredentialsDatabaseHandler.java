@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.stocks.User;
+import com.example.stocks.ui.market.securities.Security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
@@ -33,6 +34,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BALANCES = "balances";
     private static final String KEY_INCOME_PER_SECONDS = "income_per_second";
     private static final String KEY_LAST_LOGIN_DATE = "last_login_date";
+    private static final String KEY_PROPERTIES = "properties";
 
     public UserCredentialsDatabaseHandler(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,6 +50,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
                 KEY_MAIL + " TEXT, " +
                 KEY_BIRTHDAY_DATE + " LONG, " +
                 KEY_BALANCES + " TEXT, " +
+                KEY_PROPERTIES + " TEXT, " +
                 KEY_INCOME_PER_SECONDS + " TEXT, " +
                 KEY_LAST_LOGIN_DATE + " LONG, " +
                 KEY_PROFILE_PHOTO + " TEXT)");
@@ -75,6 +78,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_BIRTHDAY_DATE, user.getBirthdayDate());
         values.put(KEY_BALANCES, mapToString(user.getBalances()));
         values.put(KEY_INCOME_PER_SECONDS, mapToString(user.getIncomePerSecond()));
+        values.put(KEY_PROPERTIES, propertiesMapToString(user.getProperties()));
         values.put(KEY_LAST_LOGIN_DATE, user.getLastLoginDate());
         values.put(KEY_PROFILE_PHOTO, user.getProfilePhotoLink());
         db.insert(TABLE_USER_CREDENTIALS, null, values);
@@ -85,9 +89,16 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         return new JSONObject(balances).toString();
     }
 
+    // TODO: Fix the bug below
+    // {"USD":{"Government Bond":null,"Municipal Bond":null,"Small Company Bond":null,"Large Company Bond":null},"RUB":{"Government Bond":null,"Municipal Bond":null,"Small Company Bond":null,"Large Company Bond":null}}
+    private String propertiesMapToString(HashMap<String, HashMap<String, Security>> properties) {
+        return new JSONObject(properties).toString();
+    }
+
+    // TODO: доделать логику getUser (getProperties (cursor 10))
     public User getUser() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[]{KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO, PRIMARY_KEY_ID, KEY_BALANCES, KEY_LAST_LOGIN_DATE, KEY_LAST_LOGIN_DATE}, null,
+        Cursor cursor = db.query(TABLE_USER_CREDENTIALS, new String[]{KEY_LOGIN, KEY_PASSWORD, KEY_NAME, KEY_MAIL, KEY_BIRTHDAY_DATE, KEY_PROFILE_PHOTO, PRIMARY_KEY_ID, KEY_BALANCES, KEY_LAST_LOGIN_DATE, KEY_LAST_LOGIN_DATE, KEY_PROPERTIES}, null,
                 null, null, null, null, String.valueOf(1));
         if (cursor != null)
             cursor.moveToFirst();
@@ -96,6 +107,8 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         String balancesString = cursor.getString(7);
         user.setLastLoginDate(Long.parseLong(cursor.getString(8)));
         String incomePerSecondString = cursor.getString(9);
+        String propertiesString = cursor.getString(10);
+        Log.d("Error", propertiesString);
         try {
             JSONObject balancesJSON = new JSONObject(balancesString);
             Iterator<String> nameItr = balancesJSON.keys();
@@ -121,6 +134,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         return user;
     }
 
+    // TODO: доделать логику updateUser (getProperties (cursor 10))
     public int updateUser(User user) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();

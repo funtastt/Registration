@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mUserCredentialsHandler = new UserCredentialsDatabaseHandler(this);
+        mUserCredentialsHandler.cleanTable();
         if (mUserCredentialsHandler.checkIfUserLoggedIn()) {
             currentUserLogin = mUserCredentialsHandler.getUser().getLogin();
             successfulLogin();
