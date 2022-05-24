@@ -44,4 +44,9 @@ public class Security {
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

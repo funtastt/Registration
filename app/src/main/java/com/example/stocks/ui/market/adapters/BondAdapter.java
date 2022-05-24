@@ -67,6 +67,7 @@ public class BondAdapter extends ArrayAdapter<Bond> {
         buyBondBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getContext(), "cock", Toast.LENGTH_SHORT).show();
                 updateInfo(mHandler);
             }
         });

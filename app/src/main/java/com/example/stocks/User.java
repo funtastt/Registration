@@ -1,6 +1,8 @@
 package com.example.stocks;
 
+import com.example.stocks.ui.market.securities.Bond;
 import com.example.stocks.ui.market.securities.Currency;
+import com.example.stocks.ui.market.securities.Security;
 
 import java.sql.Time;
 import java.util.Date;
@@ -28,6 +30,22 @@ public class User {
             put(Currency.GBP.getCurrencyCode(), 0.0);
             put(Currency.JPY.getCurrencyCode(), 0.0);
             put(Currency.CHF.getCurrencyCode(), 0.0);
+        }
+    };
+
+    private HashMap<String, HashMap<String, Security>> properties = new HashMap<String, HashMap<String, Security>>(){
+        {
+            Bond governmentBond = new Bond("Government Bond", Currency.RUB, 1, 1000.0, 60.0, 52.0, 0.9999, 123);
+            Bond largeCompanyBond = new Bond("Large Company Bond", Currency.RUB, 2, 5000.0, 450.0, 12.0, 0.9995, 234);
+            Bond municipalBond = new Bond("Municipal Bond", Currency.RUB, 3, 20000.0, 2400.0, 24.0, 0.999, 345);
+            Bond smallCompanyBond = new Bond("Small Company Bond", Currency.RUB, 4, 60000.0, 9000.0, 12.0, 0.997, 456);
+            HashMap<String, Security> bonds = new HashMap<>();
+            bonds.put(governmentBond.getName(), governmentBond);
+            bonds.put(largeCompanyBond.getName(), largeCompanyBond);
+            bonds.put(municipalBond.getName(), municipalBond);
+            bonds.put(smallCompanyBond.getName(), smallCompanyBond);
+            put(Currency.RUB.getCurrencyCode(), bonds);
+            put(Currency.USD.getCurrencyCode(), bonds);
         }
     };
 
@@ -125,5 +143,13 @@ public class User {
 
     public void setIncomePerSecond(HashMap<String, Double> incomePerSecond) {
         this.incomePerSecond = incomePerSecond;
+    }
+
+    public HashMap<String, HashMap<String, Security>> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(HashMap<String, HashMap<String, Security>> properties) {
+        this.properties = properties;
     }
 }

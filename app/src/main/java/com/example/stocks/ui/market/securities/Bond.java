@@ -5,6 +5,7 @@ public class Bond extends Security{
     double couponPrice;
     double paymentPeriod;
     double bankruptcyProbability; // вероятность банкротства
+    long count;
 
     public Bond(String name, Currency currency, long id, double originalPrice, double couponPrice, double paymentPeriod, double bankruptcyProbability) {
         super(name, currency, id);
@@ -13,6 +14,16 @@ public class Bond extends Security{
         this.paymentPeriod = paymentPeriod;
         this.bankruptcyProbability = bankruptcyProbability;
         this.currentPrice = originalPrice;
+    }
+
+    public Bond(String name, Currency currency, long id, double originalPrice, double couponPrice, double paymentPeriod, double bankruptcyProbability, long count) {
+        super(name, currency, id);
+        this.originalPrice = originalPrice;
+        this.couponPrice = couponPrice;
+        this.paymentPeriod = paymentPeriod;
+        this.bankruptcyProbability = bankruptcyProbability;
+        this.currentPrice = originalPrice;
+        this.count = count;
     }
 
     public double getOriginalPrice() {
@@ -47,8 +58,11 @@ public class Bond extends Security{
         this.bankruptcyProbability = bankruptcyProbability;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }
