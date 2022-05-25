@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.example.stocks.User;
 import com.example.stocks.ui.market.securities.Security;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
@@ -21,6 +22,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import io.grpc.internal.DnsNameResolver;
 
 public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_USER_CREDENTIALS = "user_credentials";
@@ -38,6 +41,7 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
 
     public UserCredentialsDatabaseHandler(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
     }
 
     @Override
@@ -89,10 +93,28 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         return new JSONObject(balances).toString();
     }
 
-    // TODO: Fix the bug below
-    // {"USD":{"Government Bond":null,"Municipal Bond":null,"Small Company Bond":null,"Large Company Bond":null},"RUB":{"Government Bond":null,"Municipal Bond":null,"Small Company Bond":null,"Large Company Bond":null}}
     private String propertiesMapToString(HashMap<String, HashMap<String, Security>> properties) {
-        return new JSONObject(properties).toString();
+        HashMap<String, HashMap<String, String>> resultMap = new HashMap<>();
+        HashMap<String, String> intermediateResult = new HashMap<>();
+        for (Map.Entry<String, HashMap<String, Security>> entry : properties.entrySet()) {
+            String currency = entry.getKey();
+            HashMap<String, Security> currencyMap = entry.getValue();
+            if (currencyMap.isEmpty()) continue;
+            ObjectMapper mapper = new ObjectMapper();
+            for (Map.Entry<String, Security> securities : currencyMap.entrySet()) {
+                String securityName = securities.getKey();
+                Security security = securities.getValue();
+                try {
+                    String securityJSON = mapper.writeValueAsString(security);
+                    Log.d("Error", "ResultingJSONstring = " + securityJSON);
+                    intermediateResult.put(securityName, securityJSON);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
+            resultMap.put(currency, intermediateResult);
+        }
+        return new JSONObject(resultMap).toString();
     }
 
     // TODO: доделать логику getUser (getProperties (cursor 10))
@@ -108,7 +130,6 @@ public class UserCredentialsDatabaseHandler extends SQLiteOpenHelper {
         user.setLastLoginDate(Long.parseLong(cursor.getString(8)));
         String incomePerSecondString = cursor.getString(9);
         String propertiesString = cursor.getString(10);
-        Log.d("Error", propertiesString);
         try {
             JSONObject balancesJSON = new JSONObject(balancesString);
             Iterator<String> nameItr = balancesJSON.keys();
